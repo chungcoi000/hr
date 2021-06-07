@@ -5,10 +5,10 @@ const Admin = mongoose.model(
     new mongoose.Schema({
         username: String,
         password: String,
-        roles: [{
+        role: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role"
-        }]
+        }
     })
 );
 

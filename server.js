@@ -31,11 +31,9 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended : true }));
 
-app.get("/",(req, res) => {
-    res.json({ message: "HR department" });
-});
-
 require("./app/routes/admin.route")(app);
+require("./app/routes/auth.route")(app);
+require("./app/routes/user.route")(app);
 
 const PORT = process.env.PORT | 8080;
 app.listen(PORT, () => {
