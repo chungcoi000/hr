@@ -11,11 +11,11 @@ module.exports = (app) => {
     });
 
 
-    app.post("/admin/deleteAccount/:id", adminController.deleteAccount);
+    app.post("/admin/deleteAccount", adminController.deleteAccount);
 
     app.post("/admin/createAccount", adminController.createAccount);
 
     app.get("/admin/getAccount", adminController.getAccount);
 
-    app.post("/admin/updateAccount/:id", adminController.updateAccount);
+    app.post("/admin/updateAccount", adminController.updateAccount);
 };

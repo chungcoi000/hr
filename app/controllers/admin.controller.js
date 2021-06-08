@@ -46,8 +46,8 @@ exports.createAccount = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
     try {
-         await User.deleteOne({_id: req.body.id});
-         res.send({ message : "Delete account successfully"});
+        await User.deleteOne({_id: req.body.id});
+        res.send({ message : "Delete account successfully"});
     } catch (err) {
         return res.send({message: "Can't delete account"});
     }
@@ -55,17 +55,16 @@ exports.deleteAccount = async (req, res) => {
 
 exports.updateAccount = async (req, res) => {
     try {
-        const id = req.body.id;
         const username = req.body.username;
         const password = req.body.password;
-        const role = req.body.role;
-        const user = await User.updateMany(
-            {_id: id},
-            {username: username, password: password, role: role}
+        const role = await Role.findOne({name: req.body.role});
+        await User.updateMany(
+            {_id: req.body.id},
+            {username: username, password: password, role: role._id}
         );
-        user.save();
-        res.send({message : "Update successfully"})
+        res.send({message : "Update successfully"});
     } catch (err) {
+        console.log(err);
         return res.send({message: "Error"});
     }
 };
