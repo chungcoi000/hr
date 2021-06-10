@@ -1,8 +1,6 @@
-const config = require("../config/auth.config");
 const db = require("../models");
 const User = db.user;
 
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 exports.login = async (req, res) => {
@@ -25,18 +23,27 @@ exports.login = async (req, res) => {
                 });
             }
 
-            const token = jwt.sign({id: user.id}, config.secret,{
-                expiresIn: 86400
-            });
-
-            res.send({
+            req.session.user = {
                 id: user._id,
                 username: user.username,
                 role: user.role,
-                accessToken: token
-            });
+            };
+
+            res.send({message : "Login successfully"});
 
     } catch (err) {
+        console.log(err);
         return res.send({message: "Error"});
+    }
+}
+
+exports.logout = async (req, res) => {
+    try {
+        if (req.session.user) {
+            req.session.destroy();
+        }
+        return res.send("Logout successfully.");
+    } catch (err) {
+        return res.send({ message : err});
     }
 }

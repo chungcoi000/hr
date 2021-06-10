@@ -5,6 +5,15 @@ const Course = db.course;
 const Category = db.category;
 
 //Course Management
+exports.getCourse = async (req, res) => {
+    try {
+        const course = await Course.find();
+        res.send(course);
+    } catch (err) {
+        res.send({ message : "Error"});
+    }
+}
+
 exports.addCourse = async (req, res) => {
     try {
         const course = new Course({
@@ -17,11 +26,12 @@ exports.addCourse = async (req, res) => {
             return res.send({ message : "Course is already in database"});
         }
 
-        const cate = await Category.findOne({name: req.body.category});
-        if (!cate) {
+        const category = await Category.findOne({name: req.body.category});
+        if (!category) {
             return res.send({ message : "Category doesn't exist"});
         }
-        course.cate = course._id;
+
+        course.category = category._id;
         await course.save();
 
         res.send({ message : "Add course successfully"});
@@ -33,7 +43,17 @@ exports.addCourse = async (req, res) => {
 
 exports.updateCourse = async (req, res) => {
     try {
-
+        const name = req.body.name;
+        const description = req.body.description;
+        const category = await Category.findOne({name : req.body.category});
+        if (category) {
+            await Course.updateMany(
+                {_id: req.body.id},
+                {name: name, description: description, category: category._id}
+            );
+            return res.send({message: "Update course successfully!"});
+        }
+        return res.send({message : "Category doesn't existed"});
     } catch (err) {
         res.send({message: err});
     }
@@ -41,9 +61,19 @@ exports.updateCourse = async (req, res) => {
 
 exports.deleteCourse = async (req, res) => {
     try {
+        await Course.deleteOne({_id: req.body.id});
+        res.send({message: "Delete course successfully!"});
+    } catch (err) {
+        res.send({ message: "Can delete course" });
+    }
+}
+
+exports.courseRegister = async (req, res) => {
+    try {
+        const course = Course.findOne();
 
     } catch (err) {
-        res.send({ message : err });
+        res.send({ message: "Error "});
     }
 }
 //Course Category

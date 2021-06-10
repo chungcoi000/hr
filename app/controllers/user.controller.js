@@ -6,22 +6,42 @@ const bcrypt = require("bcryptjs");
 
 //Staff
 //Trainer Management
-
-//Trainee Management
-exports.getTraineeAccount = async (req, res) => {
+exports.getTrainerAccount = async (req, res) => {
     try {
-        const role = await Role.findOne({name: "trainee"});
-        if (role)
-        {
+        const role = await Role.findOne({name : "trainer"});
+        if (role) {
             const user = await User.find({role : role._id});
             return res.send(user);
         }
-        res.send("Can't find user")
+    } catch (err) {
+        return res.send({ message : "Error"});
+    }
+};
+
+exports.updateProfile = async (req, res) => [
+
+]
+//Trainee Management
+exports.getTraineeAccount = async (req, res) => {
+    try {
+        if (req.session.user && req.session.user.role.name === "staff")
+        {
+            const role = await Role.findOne({name: "trainee"});
+            if (role)
+            {
+                const user = await User.find({role : role._id});
+                return res.send(user);
+            }
+            res.send({message : "Can't find user"});
+        }
+        else {
+            res.send({message : "Only for staff "});
+        }
     } catch (err) {
         console.log(err);
-        res.send({ message : "Error"})
+        res.send({ message : "Error"});
     }
-}
+};
 
 exports.createTraineeAccount = async (req, res) => {
     try {
@@ -53,7 +73,6 @@ exports.createTraineeAccount = async (req, res) => {
 
         res.send({ message: "Can not add this account"});
     } catch (err) {
-        console.log(err);
         return res.send({message: "Error"});
     }
 };
@@ -63,22 +82,24 @@ exports.deleteTraineeInformation = async (req, res) => {
         await User.deleteOne({_id: req.body.id});
         res.send({ message : "Delete account successfully"});
     } catch (err) {
-        res.send({message: err});
+        return res.send({message: err});
     }
 };
 
 exports.updateTraineeInformation = async (req, res) => {
     try {
-        const username = req.body.username;
-        const password = req.body.password;
         const name = req.body.name;
         const dob = req.body.dob;
         const education = req.body.education;
         const bio = req.body.bio;
+
+        if (!req.body.id) {
+            return res.send({message: "Id not found"});
+        }
+
         await User.updateMany(
             {_id: req.body.id},
-            {username: username, password: password, name: name,
-                    dob: dob, education: education, bio: bio}
+            { name: name, dob: dob, education: education, bio: bio}
         );
         res.send({message : "Update successfully"});
     } catch (err) {
@@ -86,6 +107,19 @@ exports.updateTraineeInformation = async (req, res) => {
     }
 };
 
-//Trainer
+exports.updatePassword = async (req, res) => {
+    try {
+        await User.updateOne({_id : req.body.id},{password : req.body.password});
+        return res.send({message : "Password has been updated"});
+    } catch (err) {
+        return res.send({ message : "Error "});
+    }
+};
 
-//Trainee
+exports.viewProfile = async (req, res) => {
+    try {
+
+    } catch (err) {
+        return res.send({ message : "Error "});
+    }
+};

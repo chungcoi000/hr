@@ -5,6 +5,7 @@ const db = require("./app/models");
 const dbConfig = require("./app/config/db.config")
 const Category = db.category;
 const Role = db.role;
+const session = require('express-session');
 
 const app = express();
 
@@ -33,9 +34,16 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended : true }));
 
-require("./app/routes/admin.route")(app);
+app.use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: 'humanResourceManagement',
+    cookie: {maxAge : 60000 }
+}))
+
 require("./app/routes/auth.route")(app);
 require("./app/routes/user.route")(app);
+require("./app/routes/admin.route")(app);
 
 const PORT = process.env.PORT | 8080;
 app.listen(PORT, () => {

@@ -64,7 +64,6 @@ exports.updateAccount = async (req, res) => {
         );
         res.send({message : "Update successfully"});
     } catch (err) {
-        console.log(err);
         return res.send({message: "Error"});
     }
 };
