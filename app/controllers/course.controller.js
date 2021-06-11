@@ -57,7 +57,7 @@ exports.updateCourse = async (req, res) => {
     } catch (err) {
         res.send({message: err});
     }
-}
+};
 
 exports.deleteCourse = async (req, res) => {
     try {
@@ -77,3 +77,29 @@ exports.courseRegister = async (req, res) => {
     }
 }
 //Course Category
+
+exports.getCourseFromCategory = async (req, res) => {
+    try {
+        const category = await Category.findOne();
+        console.log(category);
+        if (category) {
+            const course = await Course.find({category: category._id});
+            return res.send(course);
+        }
+    } catch (err) {
+        res.send({message : "Error"});
+    }
+};
+
+// Add user to course
+
+exports.addUserToCourse = async (req, res) => {
+    try {
+        const user = await User.find({role: req.body.role});
+        if (user) {
+            const course = await User.findOne({})
+        }
+    } catch (err) {
+        return res.send({ message: "Error"});
+    }
+}

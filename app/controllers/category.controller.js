@@ -1,6 +1,6 @@
 const db = require("../models");
 const Category = db.category;
-
+const Course = db.course;
 exports.getCategory = async (req, res) => {
     try {
         const category = await Category.find();
@@ -50,4 +50,5 @@ exports.updateCategory = async  (req, res) => {
     } catch (err) {
         return res.send({message: "Error"});
     }
-}
+};
+

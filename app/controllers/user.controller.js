@@ -18,9 +18,6 @@ exports.getTrainerAccount = async (req, res) => {
     }
 };
 
-exports.updateProfile = async (req, res) => [
-
-]
 //Trainee Management
 exports.getTraineeAccount = async (req, res) => {
     try {
@@ -29,7 +26,7 @@ exports.getTraineeAccount = async (req, res) => {
             const role = await Role.findOne({name: "trainee"});
             if (role)
             {
-                const user = await User.find({role : role._id});
+                const user = await User.find({role : role._id}).select("-password -username");
                 return res.send(user);
             }
             res.send({message : "Can't find user"});
@@ -77,7 +74,7 @@ exports.createTraineeAccount = async (req, res) => {
     }
 };
 
-exports.deleteTraineeInformation = async (req, res) => {
+exports.deleteInformation = async (req, res) => {
     try {
         await User.deleteOne({_id: req.body.id});
         res.send({ message : "Delete account successfully"});
@@ -86,7 +83,7 @@ exports.deleteTraineeInformation = async (req, res) => {
     }
 };
 
-exports.updateTraineeInformation = async (req, res) => {
+exports.updateInformation = async (req, res) => {
     try {
         const name = req.body.name;
         const dob = req.body.dob;
@@ -116,10 +113,3 @@ exports.updatePassword = async (req, res) => {
     }
 };
 
-exports.viewProfile = async (req, res) => {
-    try {
-
-    } catch (err) {
-        return res.send({ message : "Error "});
-    }
-};
