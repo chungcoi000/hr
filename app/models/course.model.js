@@ -8,11 +8,7 @@ const Course = mongoose.model(
         category: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Category"
-        },
-        participants: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        }]
+        }
     })
 );
 

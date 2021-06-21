@@ -1,6 +1,5 @@
 const db = require("../models");
 const User = db.user;
-const Role = db.role;
 const Course = db.course;
 const Category = db.category;
 
@@ -106,23 +105,23 @@ exports.addUserToCourse = async (req, res) => {
         if (userSession && userSession.user.role === "staff") {
             const user = req.body.user_id;
             const courseId = req.body.course_id;
-            if (!user) {
-                res.send({message : "Must provide user id"});
+            console.log(user);
+            if (!courseId) {
+                res.send({message : "Must provide course id"});
             }
 
-            if (! await User.findOne({_id: user})) {
-                return res.send({message: "Can  not find user "});
+            if (! await Course.findOne({_id: courseId})) {
+                return res.send({message: "Can  not find course "});
             }
-
-            await Course.findOne({_id : courseId }).catch(err => {res.send({message : err})});
-            await Course.updateOne({
-                _id: courseId
+            await User.findOne({_id : user }).catch(err => {res.send({message : err})});
+            await User.updateOne({
+                _id: user
             },{
                 $push: {
-                    participants: user
+                    courseAssign: courseId
                 }
             })
-            res.send({message : "Add User to Course successfully"});
+            res.send({message : "Add Course to User successfully"});
         }
         else {
             res.send({message : "No session provided" });
@@ -139,20 +138,20 @@ exports.deleteUserFromCourse = async (req, res) => {
         if (userSession && userSession.user.role === "staff") {
             const user = req.body.user_id;
             const courseId = req.body.course_id;
-            if (!user) {
-                res.send({message : "Must provide user id"});
+            if (!courseId) {
+                res.send({message : "Must provide course id"});
             }
 
-            if (! await User.findOne({_id: user})) {
+            if (! await Course.findOne({_id: courseId})) {
                 return res.send({message: "Can not find user "});
             }
 
-            await Course.findOne({_id : courseId }).catch(err => {res.send({message : err})});
-            await Course.updateOne({
-                _id: courseId
+            await User.findOne({_id : user }).catch(err => {res.send({message : err})});
+            await User.updateOne({
+                _id: user
             },{
                 $pull: {
-                    participants: user
+                    courseAssign: courseId
                 }
             })
             res.send({message : "Delete User from Course successfully"});
@@ -168,9 +167,34 @@ exports.deleteUserFromCourse = async (req, res) => {
 
 exports.viewCourseAssigned = async (req, res) => {
     try {
-
+        const user = req.session.user;
+        if (user) {
+            const course = await User.findOne({_id : user.id})
+            .populate({path: 'courseAssign',model: "Course", select: "name description category"});
+            return res.send(course);
+        }
+        return res.send({message : "No session provided"})
     } catch (err) {
         console.log(err);
         return res.send({ message: "Error"});
     }
-}
+};
+
+exports.searchCourse = async (req, res) => {
+    try {
+        let query = req.body.query;
+
+        const course = await Course.find({name: { $regex: query, $options: 'i'}})
+            .populate({path : "category", model: "Category", select: "name description"});
+
+        if (course.length === 0) {
+            return res.send({message : "Cannot find course"});
+        }
+
+        res.send(course);
+    } catch (err) {
+        console.log(err);
+        return res.send({ message: "Error"});
+
+    }
+};

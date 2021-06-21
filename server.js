@@ -6,7 +6,6 @@ const dbConfig = require("./app/config/db.config")
 const Category = db.category;
 const Role = db.role;
 const session = require('express-session');
-const hbs = require('hbs');
 const path = require('path');
 
 const app = express();
@@ -30,7 +29,6 @@ app.set('view engine', 'hbs');
 
 app.use('/public', express.static(path.join(__dirname, '/app/public')));
 console.log(path.join(__dirname, '/app/public'));
-// hbs.registerPartials(__dirname + 'views/partials');
 
 db.mongoose
     .connect(dbConfig.url, {
@@ -47,8 +45,6 @@ db.mongoose
         process.exit();
     })
 
-
-
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended : true }));
@@ -60,17 +56,9 @@ app.use(session({
     cookie: {maxAge : 60000 }
 }))
 
-app.get("/home", (req, res) => {
-    res.render("index")
-});
-
-app.post("/home", (req, res) => {
-    res.render("index")
-});
-
-// require("./app/routes/auth.route")(app);
-// require("./app/routes/user.route")(app);
-// require("./app/routes/admin.route")(app);
+require("./app/routes/auth.route")(app);
+require("./app/routes/user.route")(app);
+require("./app/routes/admin.route")(app);
 
 const PORT = process.env.PORT | 8080;
 app.listen(PORT, () => {

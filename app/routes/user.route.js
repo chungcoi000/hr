@@ -19,8 +19,9 @@ module.exports = (app) => {
     app.post("/staff/deleteCourse", courseController.deleteCourse);
     app.post("/staff/updateCourse", courseController.updateCourse);
     app.get("/staff/courseCate", courseController.getCourseFromCategory);
-    app.post("/staff/addUser", courseController.addUserToCourse);
-    app.post("/staff/deleteUser", courseController.deleteUserFromCourse);
+    app.post("/staff/addCourseToUser", courseController.addUserToCourse);
+    app.post("/staff/deleteCourseFromUser", courseController.deleteUserFromCourse);
+    app.post("/staff/searchCourse", courseController.searchCourse);
 
     //Category Manager
     app.get("/staff/getCate", categoryController.getCategory);
@@ -28,4 +29,5 @@ module.exports = (app) => {
     app.post("/staff/updateCate", categoryController.updateCategory);
     app.post("/staff/deleteCate", categoryController.deleteCategory);
 
+    app.get("/trainee/viewCourse", courseController.viewCourseAssigned);
 };
