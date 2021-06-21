@@ -1,10 +1,9 @@
 const adminController = require('../controllers/admin.controller');
-const authController = require('../controllers/auth.controller');
 
 module.exports = (app) => {
     app.use(function (req, res, next){
         try {
-            if (req.session.user && req.session.user.role.name === "admin") {
+            if (req.session && req.session.user.role === "admin") {
                 next();
             }
         } catch (err) {
@@ -24,5 +23,8 @@ module.exports = (app) => {
 
     app.post("/admin/updateAccount",
         adminController.updateAccount);
+
+    app.post("/admin/getAccountById",
+        adminController.getAccountById);
 
 };

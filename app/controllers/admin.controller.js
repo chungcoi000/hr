@@ -6,10 +6,19 @@ const bcrypt = require("bcryptjs");
 
 exports.getAccount = async (req, res) => {
     try {
-        const user = await User.find();
+        const user = await User.find({}).select("username password role");
         res.send(user);
     } catch (err) {
         res.send({ message : "Error"})
+    }
+}
+
+exports.getAccountById = async (req, res) => {
+    try {
+        const user = await User.find({_id: req.body.id}).select("username password role");
+        return res.send(user);
+    } catch (err) {
+        return res.send({ message : "Error "});
     }
 }
 
@@ -37,7 +46,7 @@ exports.createAccount = async (req, res) => {
             return res.send({message: "Add successfully! "});
         }
 
-        res.send({ message: "Can not add this account"});
+        return res.send({ message: "Can not create this account"});
 
     } catch (err) {
         return res.send({message: "Error"});

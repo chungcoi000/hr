@@ -12,6 +12,14 @@ exports.getCourse = async (req, res) => {
     } catch (err) {
         res.send({ message : "Error"});
     }
+};
+exports.getCourseById = async (req, res) => {
+    try {
+        const course = await Course.find({_id : req.body.id});
+        res.send(course);
+    } catch (err) {
+        res.send({ message : "Error"});
+    }
 }
 
 exports.addCourse = async (req, res) => {
@@ -66,16 +74,15 @@ exports.deleteCourse = async (req, res) => {
     } catch (err) {
         res.send({ message: "Can delete course" });
     }
-}
+};
 
-exports.courseRegister = async (req, res) => {
-    try {
-        const course = Course.findOne();
+exports.findCourse = async (req, res) => {
+    try{
 
     } catch (err) {
-        res.send({ message: "Error "});
+        return res.send({ message : "Error"})
     }
-}
+};
 //Course Category
 
 exports.getCourseFromCategory = async (req, res) => {
@@ -95,11 +102,75 @@ exports.getCourseFromCategory = async (req, res) => {
 
 exports.addUserToCourse = async (req, res) => {
     try {
-        const user = await User.find({role: req.body.role});
-        if (user) {
-            const course = await User.findOne({})
+        const userSession = req.session
+        if (userSession && userSession.user.role === "staff") {
+            const user = req.body.user_id;
+            const courseId = req.body.course_id;
+            if (!user) {
+                res.send({message : "Must provide user id"});
+            }
+
+            if (! await User.findOne({_id: user})) {
+                return res.send({message: "Can  not find user "});
+            }
+
+            await Course.findOne({_id : courseId }).catch(err => {res.send({message : err})});
+            await Course.updateOne({
+                _id: courseId
+            },{
+                $push: {
+                    participants: user
+                }
+            })
+            res.send({message : "Add User to Course successfully"});
+        }
+        else {
+            res.send({message : "No session provided" });
         }
     } catch (err) {
+        console.log(err);
+        return res.send({ message: "Error"});
+    }
+};
+
+exports.deleteUserFromCourse = async (req, res) => {
+    try {
+        const userSession = req.session
+        if (userSession && userSession.user.role === "staff") {
+            const user = req.body.user_id;
+            const courseId = req.body.course_id;
+            if (!user) {
+                res.send({message : "Must provide user id"});
+            }
+
+            if (! await User.findOne({_id: user})) {
+                return res.send({message: "Can not find user "});
+            }
+
+            await Course.findOne({_id : courseId }).catch(err => {res.send({message : err})});
+            await Course.updateOne({
+                _id: courseId
+            },{
+                $pull: {
+                    participants: user
+                }
+            })
+            res.send({message : "Delete User from Course successfully"});
+        }
+        else {
+            res.send({message : "No session provided" });
+        }
+    } catch (err) {
+        console.log(err);
+        return res.send({ message: "Error"});
+    }
+};
+
+exports.viewCourseAssigned = async (req, res) => {
+    try {
+
+    } catch (err) {
+        console.log(err);
         return res.send({ message: "Error"});
     }
 }
