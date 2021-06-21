@@ -6,12 +6,31 @@ const dbConfig = require("./app/config/db.config")
 const Category = db.category;
 const Role = db.role;
 const session = require('express-session');
+const hbs = require('hbs');
+const path = require('path');
 
 const app = express();
 
 const corsOption = {
     origin: "http://localhost:8081"
 };
+
+app.use(cors(corsOption));
+
+const handlebars = require('express-handlebars').create({
+    layoutsDir: path.join(__dirname, "app/views/layouts"),
+    partialsDir: path.join(__dirname, "app/views/partials"),
+    defaultLayout: 'main',
+    extname: 'hbs'
+});
+
+app.engine('hbs', handlebars.engine);
+app.set('views', path.join(__dirname, 'app/views'));
+app.set('view engine', 'hbs');
+
+app.use('/public', express.static(path.join(__dirname, '/app/public')));
+console.log(path.join(__dirname, '/app/public'));
+// hbs.registerPartials(__dirname + 'views/partials');
 
 db.mongoose
     .connect(dbConfig.url, {
@@ -28,7 +47,7 @@ db.mongoose
         process.exit();
     })
 
-app.use(cors(corsOption));
+
 
 app.use(bodyParser.json());
 
@@ -41,9 +60,17 @@ app.use(session({
     cookie: {maxAge : 60000 }
 }))
 
-require("./app/routes/auth.route")(app);
-require("./app/routes/user.route")(app);
-require("./app/routes/admin.route")(app);
+app.get("/home", (req, res) => {
+    res.render("index")
+});
+
+app.post("/home", (req, res) => {
+    res.render("index")
+});
+
+// require("./app/routes/auth.route")(app);
+// require("./app/routes/user.route")(app);
+// require("./app/routes/admin.route")(app);
 
 const PORT = process.env.PORT | 8080;
 app.listen(PORT, () => {
