@@ -5,10 +5,10 @@ const bcrypt = require("bcryptjs");
 
 exports.login = async (req, res) => {
     try {
-        const user = await User.findOne({username : req.body.username})
+        const user = await User.findOne({username: req.body.username})
             .populate("role", "-__v")
             if (!user) {
-                return res.send({ message : " User not found "});
+                return res.render("auth/login");
             }
 
             const passwordIsValid = bcrypt.compareSync(
@@ -17,10 +17,7 @@ exports.login = async (req, res) => {
             );
 
             if (!passwordIsValid) {
-                return res.send({
-                    accessToken: null,
-                    message: "Invalid Password!"
-                });
+                return res.render("auth/login");
             }
 
             req.session.user = {
@@ -29,7 +26,7 @@ exports.login = async (req, res) => {
                 role: user.role.name,
             };
 
-            res.send({message : "Login successfully"});
+            res.redirect("/home");
 
     } catch (err) {
         console.log(err);
@@ -42,7 +39,7 @@ exports.logout = async (req, res) => {
         if (req.session.user) {
             req.session.destroy();
         }
-        return res.send("Logout successfully.");
+        return res.redirect("/login");
     } catch (err) {
         return res.send({ message : err});
     }

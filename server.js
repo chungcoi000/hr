@@ -23,6 +23,13 @@ const handlebars = require('express-handlebars').create({
     extname: 'hbs'
 });
 
+const hbs = require("handlebars")
+
+hbs.registerHelper("ifCond" , (v1, v2, opt) => {
+    if (v1 === v2) return opt.fn(this);
+
+})
+
 app.engine('hbs', handlebars.engine);
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'hbs');
@@ -54,7 +61,18 @@ app.use(session({
     saveUninitialized: true,
     secret: 'humanResourceManagement',
     cookie: {maxAge : 60000 }
-}))
+}));
+
+app.get("/home", (req, res) =>{
+    if (req.session.user.role) {
+        console.log(req.session.user.role);
+        return res.render("home", {
+            check: req.session.user.role
+        });
+    } else {
+        return res.render("home");
+    }
+});
 
 require("./app/routes/auth.route")(app);
 require("./app/routes/user.route")(app);

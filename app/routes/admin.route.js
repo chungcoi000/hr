@@ -3,8 +3,8 @@ const adminController = require('../controllers/admin.controller');
 module.exports = (app) => {
     app.use(function (req, res, next){
         try {
-            if (req.session && req.session.user.role === "admin") {
-                next();
+            if (req.session ) {
+                if(req.session.user.role === "admin") next();
             }
         } catch (err) {
             console.log(err);
