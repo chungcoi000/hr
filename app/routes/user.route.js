@@ -8,9 +8,8 @@ module.exports = (app) => {
     app.post("/staff/createAccount", userController.createTraineeAccount);
     app.post("/staff/deleteInfo", userController.deleteInformation);
     app.post("/staff/updateInfo", userController.updateInformation);
-    app.get("/staff/getTrainee", userController.getTraineeAccount);
-    app.get("/staff/getTrainer", userController.getTrainerAccount);
     app.post("/staff/getAccountById", userController.getAccountById);
+    app.post("/staff/searchUser", userController.searchUser);
 
     // Course Manager
     app.get("/staff/getCourse", courseController.getCourse);
@@ -29,5 +28,11 @@ module.exports = (app) => {
     app.post("/staff/updateCate", categoryController.updateCategory);
     app.post("/staff/deleteCate", categoryController.deleteCategory);
 
-    app.get("/trainee/viewCourse", courseController.viewCourseAssigned);
+    //User
+    app.get("/user/viewCourse", courseController.viewCourseAssigned);
+
+    //API
+    app.get("/api/getTrainee", userController.getTraineeAccount);
+    app.get("/api/getTrainer", userController.getTrainerAccount);
+    app.post("/api/updatePassword", userController.updatePassword);
 };

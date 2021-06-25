@@ -35,7 +35,6 @@ app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'hbs');
 
 app.use('/public', express.static(path.join(__dirname, '/app/public')));
-console.log(path.join(__dirname, '/app/public'));
 
 db.mongoose
     .connect(dbConfig.url, {
@@ -77,6 +76,7 @@ app.get("/home", (req, res) =>{
 require("./app/routes/auth.route")(app);
 require("./app/routes/user.route")(app);
 require("./app/routes/admin.route")(app);
+
 
 const PORT = process.env.PORT | 8080;
 app.listen(PORT, () => {

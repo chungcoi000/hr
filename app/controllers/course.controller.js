@@ -188,7 +188,7 @@ exports.searchCourse = async (req, res) => {
             .populate({path : "category", model: "Category", select: "name description"});
 
         if (course.length === 0) {
-            return res.send({message : "Cannot find course"});
+            return res.send({message : "Can't find anything"});
         }
 
         res.send(course);
