@@ -22,12 +22,18 @@
                     <li><a href="#">Categories</a></li>
                     <li><a href="#">Trainer</a></li>
                     <li><a href="#">Trainee</a></li>
-                    <li><a href="#">Course</a></li>
+                    <li><a class="drop" href="#">Course</a>
+                    <ul>
+                        <li><a href="#">IT</a></li>
+                        <li><a href="#">Business</a></li>
+                        <li><a href="#">Design</a></li>
+                    </ul>
+                    </li>
                     <li><a href="/logout">Logout</a></li>
                 {{/ifCond}}
 
                 {{#ifCond check "===" "trainer"}}
-                    <li><a href="/#">Profile</a></li>
+                    <li><a href="/api/getTrainer">Profile</a></li>
                     <li><a href="#">Course</a></li>
                     <li><a href="/logout">Logout</a></li>
                 {{/ifCond}}
