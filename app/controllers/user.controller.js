@@ -132,7 +132,23 @@ exports.updateInformation = async (req, res) => {
 
 exports.updatePassword = async (req, res) => {
     try {
-        await User.updateOne({_id: req.body.id}, {password: req.body.password});
+        const user = await User.findOne({_id: req.body.id});
+        const currentPassword = req.body.password;
+        let newPassword = req.body.new_password;
+
+        const comparePassword = await bcrypt.compareSync(
+            currentPassword,
+            user.password,
+        );
+
+        console.log(comparePassword);
+        if (comparePassword === false)
+        {
+            return res.send({ message : "Password doesn't match"});
+        }
+
+        newPassword = bcrypt.hashSync(newPassword, 8);
+        await user.updateOne({password: newPassword});
         return res.send({message: "Password has been updated"});
     } catch (err) {
         return res.send({message: "Error "});
@@ -141,23 +157,27 @@ exports.updatePassword = async (req, res) => {
 
 exports.searchUser = async (req, res) => {
     try {
-        let query = req.body.query;
+        if (req.session && req.session.role.name === "staff")
+        {
+            let query = req.body.query;
 
-        const trainee = await User.find(
-            {
-                $or: [{name: {$regex: query, $options: 'i'}},
-                    {bio: {$regex: query, $options: 'i'}},
-                    {education: {$regex: query, $option: 'i'}}
-                ]
-            })
+            const trainee = await User.find(
+                {
+                    $or: [
+                        {name: {$regex: query, $options: 'i'}},
+                        {bio: {$regex: query, $options: 'i'}},
+                        {education: {$regex: query, $option: 'i'}}
+                    ]
+                })
 
-            .populate({path: "course", model: "Course", select: "name description"});
+                .populate({path: "course", model: "Course", select: "name description"});
 
-        if (trainee.length === 0) {
-            return res.send({message: "Can't find anything"});
+            if (trainee.length === 0) {
+                return res.send({message: "Can't find anything"});
+            }
+
+            res.send(trainee);
         }
-
-        res.send(trainee);
     } catch (err) {
         console.log(err);
         return res.send({message: "Error"});

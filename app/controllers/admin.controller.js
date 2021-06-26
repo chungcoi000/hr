@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 
 exports.getAccount = async (req, res) => {
     try {
-        const user = await User.find({}).select("username password role");
+        const user = await User.find({}).select("username role");
         res.send(user);
     } catch (err) {
         res.send({ message : "Error"})

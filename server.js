@@ -7,6 +7,7 @@ const Category = db.category;
 const Role = db.role;
 const session = require('express-session');
 const path = require('path');
+const hbs = require("handlebars")
 
 const app = express();
 
@@ -22,8 +23,6 @@ const handlebars = require('express-handlebars').create({
     defaultLayout: 'main',
     extname: 'hbs'
 });
-
-const hbs = require("handlebars")
 
 hbs.registerHelper("ifCond" , (v1, v2, opt) => {
     if (v1 === v2) return opt.fn(this);
@@ -64,7 +63,6 @@ app.use(session({
 
 app.get("/home", (req, res) =>{
     if (req.session.user.role) {
-        console.log(req.session.user.role);
         return res.render("home", {
             check: req.session.user.role
         });
