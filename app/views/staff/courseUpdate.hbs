@@ -1,0 +1,27 @@
+<div class="form">
+    <form action="/action_page.php">
+        <div class="container">
+            <hr>
+
+            <label for="name"><b>Name</b></label>
+            <input type="text" placeholder="Enter Course's name" name="name" id="name" required>
+
+            <label for="psw"><b>Description</b></label>
+            <input type="text" placeholder="Enter Description" name="description" id="description" required>
+
+            <label class="label">Category</label>
+            <div class="rs-select2 js-select-simple select--no-search">
+                <select name="category">
+                    <option>IT</option>
+                    <option>Business</option>
+                    <option>Design</option>
+                </select>
+                <div class="select-dropdown"></div>
+            </div>
+            <hr>
+
+            <button type="submit" class="btn">Update</button>
+            <button type="submit" class="btn">Cancel</button>
+        </div>
+    </form>
+</div>
