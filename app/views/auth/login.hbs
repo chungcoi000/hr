@@ -53,6 +53,9 @@
 
 <form action="/login" method="post">
     <div class="container">
+        {{#if error}}
+            <p class="danger">{{message}}</p>
+        {{/if}}
         <label for="uname"><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="username" required>
 

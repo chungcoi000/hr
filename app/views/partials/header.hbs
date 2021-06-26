@@ -9,13 +9,16 @@
             <!-- ################################################################################################ -->
             <ul class="clear">
                 <li class="active"><a href="/home">Home</a></li>
-                <li><a href="/login">Login</a></li>
-                {{#ifCond check "admin"}}
+                {{#if home}}
+                    <li><a href="/login">Login</a></li>
+                {{/if}}
+
+                {{#ifCond check "===" "admin"}}
                     <li><a href="">Account</a></li>
                     <li><a href="/logout">Logout</a></li>
                 {{/ifCond}}
 
-                {{#ifCond check "staff"}}
+                {{#ifCond check "===" "staff"}}
                     <li><a href="#">Categories</a></li>
                     <li><a href="#">Trainer</a></li>
                     <li><a href="#">Trainee</a></li>
@@ -23,13 +26,13 @@
                     <li><a href="/logout">Logout</a></li>
                 {{/ifCond}}
 
-                {{#ifCond check "trainer"}}
+                {{#ifCond check "===" "trainer"}}
                     <li><a href="/#">Profile</a></li>
                     <li><a href="#">Course</a></li>
                     <li><a href="/logout">Logout</a></li>
                 {{/ifCond}}
 
-                {{#ifCond check "trainee"}}
+                {{#ifCond check "===" "trainee"}}
                     <li><a href="/#">Profile</a></li>
                     <li><a href="#">Course</a></li>
                     <li><a href="/logout">Logout</a></li>

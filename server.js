@@ -24,8 +24,16 @@ const handlebars = require('express-handlebars').create({
     extname: 'hbs'
 });
 
-hbs.registerHelper("ifCond" , (v1, v2, opt) => {
-    if (v1 === v2) return opt.fn(this);
+hbs.registerHelper("ifCond", (v1, opr, v2, opt) => {
+    switch (opr) {
+        case "===":
+            if (v1 === v2) return opt.fn(this);
+            break;
+
+        case "!==":
+            if (v1 !== v2) return opt.fn(this);
+            break;
+    }
 
 })
 
@@ -52,23 +60,25 @@ db.mongoose
 
 app.use(bodyParser.json());
 
-app.use(bodyParser.urlencoded({ extended : true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(session({
     resave: true,
     saveUninitialized: true,
     secret: 'humanResourceManagement',
-    cookie: {maxAge : 60000 }
+    cookie: {maxAge: 60000}
 }));
 
-app.get("/home", (req, res) =>{
-    if (req.session.user.role) {
+app.get("/home", (req, res) => {
+    if (req.session.user) {
         return res.render("home", {
-            check: req.session.user.role
+            check: req.session.user.role,
         });
-    } else {
-        return res.render("home");
     }
+    return res.render("home", {
+        home: true
+    });
+
 });
 
 require("./app/routes/auth.route")(app);

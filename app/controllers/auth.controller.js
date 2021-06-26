@@ -8,7 +8,10 @@ exports.login = async (req, res) => {
         const user = await User.findOne({username: req.body.username})
             .populate("role", "-__v")
             if (!user) {
-                return res.render("auth/login");
+                return res.render("auth/login",{
+                    error: true,
+                    message: "User doesn't exist"
+                });
             }
 
             const passwordIsValid = bcrypt.compareSync(
@@ -17,7 +20,10 @@ exports.login = async (req, res) => {
             );
 
             if (!passwordIsValid) {
-                return res.render("auth/login");
+                return res.render("auth/login", {
+                    error: true,
+                    message: "Incorrect password"
+                });
             }
 
             req.session.user = {
