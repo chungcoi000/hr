@@ -8,12 +8,12 @@
             <th>Delete</th>
         </tr>
         {{#each user}}
-        <tr>
-            <th>{{username}}</th>
-            <th>{{role.name}}</th>
-            <th><button>Update</button></th>
-            <th><button>Delete</button></th>
-        </tr>
+            <tr>
+                <th>{{username}}</th>
+                <th>{{role.name}}</th>
+                <th><button>Update</button></th>
+                <th><button><a href="/admin/deleteAccount?delete_id={{_id}}""> Delete</a> </button></th>
+            </tr>
         {{/each}}
     </table>
 </div>
