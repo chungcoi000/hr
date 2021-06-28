@@ -36,6 +36,10 @@ hbs.registerHelper("ifCond", (v1, opr, v2, opt) => {
     }
 
 })
+hbs.registerHelper('log', function(content) {
+    console.log(content.fn(this));
+    return '';
+});
 
 app.engine('hbs', handlebars.engine);
 app.set('views', path.join(__dirname, 'app/views'));

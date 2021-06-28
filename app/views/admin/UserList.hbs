@@ -12,8 +12,38 @@
             <th>{{username}}</th>
             <th>{{role.name}}</th>
             <th><button>Update</button></th>
-            <th><button>Delete</button></th>
+            <th><button onclick="onDelete('{{_id}}')">Delete</button></th>
         </tr>
         {{/each}}
     </table>
 </div>
+
+<script>
+   function onDelete(user_id) {
+       try {
+           const myHeaders = new Headers();
+           myHeaders.append("Content-Type", "application/json");
+
+           const raw = JSON.stringify({
+               "delete_id": user_id
+           });
+
+           const requestOptions = {
+               method: 'DELETE',
+               headers: myHeaders,
+               body: raw,
+               redirect: 'follow'
+           };
+
+           fetch("/admin/deleteAccount", requestOptions)
+                   .then(response => response.text())
+                   .then(result => {
+                       window.location.reload();
+                       console.log(result)
+                   })
+                   .catch(error => console.log('error', error));
+       } catch (e) {
+           console.log(e);
+       }
+   }
+</script>

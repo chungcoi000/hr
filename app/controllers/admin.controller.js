@@ -10,7 +10,7 @@ exports.getAccount = async (req, res) => {
 
         const user = await User.find({role}).select("username")
             .lean().populate("role", "name", "Role");
-        // console.log(user);
+        console.log(user[0]);
         return res.render('admin/UserList', {user: user});
 
     } catch (err) {
@@ -25,6 +25,14 @@ exports.getAccountById = async (req, res) => {
         return res.send(user);
     } catch (err) {
         return res.send({message: "Error "});
+    }
+}
+exports.getUpdateAccount = async (req, res) => {
+    try {
+        const roles = await Role.find({name: {$in: ["staff", "trainer"]}}).lean();
+        res.render("admin/editUser", {roles: roles})
+    } catch (e) {
+        return res.send({message: e})
     }
 }
 
@@ -61,8 +69,10 @@ exports.createAccount = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
     try {
-        await User.deleteOne({_id: req.body.id});
-        res.send({message: "Delete account successfully"});
+        const deleteId = req.body.delete_id;
+        console.log(deleteId)
+        await User.deleteOne({_id: deleteId});
+        res.send({message: "Delete successfully"});
     } catch (err) {
         return res.send({message: "Can't delete account"});
     }
@@ -82,7 +92,7 @@ exports.updateAccount = async (req, res) => {
         const username = req.body.username;
         let password = req.body.new_password;
         password = bcrypt.hashSync(password, 8);
-        const role = await Role.findOne({name: req.body.role});
+        const role = await Role.findOne({name: {$in: ["staff", "trainer"]}});
         await User.updateMany(
             {_id: req.body.id},
             {username: username, password: password, role: role._id}
@@ -92,3 +102,5 @@ exports.updateAccount = async (req, res) => {
         return res.send({message: "Error"});
     }
 };
+
+

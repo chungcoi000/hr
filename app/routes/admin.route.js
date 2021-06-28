@@ -8,11 +8,11 @@ module.exports = (app) => {
             }
         } catch (err) {
             console.log(err);
-            res.send({message : "No session found"})
+            res.redirect("/login")
         }
     });
 
-    app.get("/admin/deleteAccount",
+    app.delete("/admin/deleteAccount",
         adminController.deleteAccount);
 
     app.post("/admin/createAccount",
