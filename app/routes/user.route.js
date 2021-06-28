@@ -7,7 +7,6 @@ module.exports = (app) => {
     //User Manager
     app.post("/staff/createAccount", userController.createTraineeAccount);
     app.post("/staff/deleteInfo", userController.deleteInformation);
-    app.post("/staff/updateInfo", userController.updateInformation);
     app.post("/staff/getAccountById", userController.getAccountById);
     app.post("/staff/searchUser", userController.searchUser);
 
@@ -35,4 +34,5 @@ module.exports = (app) => {
     app.get("/api/getTrainee", userController.getTraineeAccount);
     app.get("/api/getTrainer", userController.getTrainerAccount);
     app.post("/api/updatePassword", userController.updatePassword);
+    app.post("/api/updateInfo", userController.updateInformation);
 };

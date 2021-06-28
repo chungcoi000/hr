@@ -27,6 +27,9 @@ module.exports = (app) => {
     app.post("/admin/updateAccount",
         adminController.updateAccount);
 
+    app.get("/admin/updateAccount",
+        adminController.getUpdateAccount);
+
     app.post("/admin/getAccountById",
         adminController.getAccountById);
 };
