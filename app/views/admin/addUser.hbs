@@ -1,27 +1,30 @@
 <div class="form">
-    <form action="/admin/createAccount">
+    <form action="/admin/createAccount" method="post">
         <div class="container">
+            {{#if error}}
+                <p class="danger">{{message}}</p>
+            {{/if}}
             <hr>
-
             <label for="Username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="Username" id="Username" required>
+            <input type="text" placeholder="Enter Username" name="username" id="Username" required>
 
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+            <input type="password" placeholder="Enter Password" name="password" id="psw" required>
 
             <label class="label">Role</label>
             <div class="rs-select2 js-select-simple select--no-search">
                 <select name="subject">
-                    <option disabled="disabled" selected="selected">Choose option</option>
-                    <option>Training Staff</option>
-                    <option>Trainer</option>
+                        <option disabled="disabled" selected="selected">Choose option</option>
+                    {{#each roles}}
+                        <option name="role"><p>{{this.name}}</p></option>
+                    {{/each}}
                 </select>
                 <div class="select-dropdown"></div>
             </div>
             <hr>
 
-            <button type="submit" class="createbtn">Add</button>
-            <button type="submit" class="createbtn">Cancel</button>
+            <a href="admin/UserList"><button type="submit" class="createbtn">Add</button></a>
+            <a href="admin/UserList"><button type="submit" class="createbtn">Cancel</button></a>
         </div>
     </form>
 </div>

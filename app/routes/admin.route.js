@@ -12,11 +12,14 @@ module.exports = (app) => {
         }
     });
 
-    app.post("/admin/deleteAccount",
+    app.get("/admin/deleteAccount",
         adminController.deleteAccount);
 
     app.post("/admin/createAccount",
         adminController.createAccount);
+
+    app.get('/admin/createAccount',
+        adminController.getCreateAccount);
 
     app.get("/admin/getAccount",
         adminController.getAccount);
@@ -26,5 +29,4 @@ module.exports = (app) => {
 
     app.post("/admin/getAccountById",
         adminController.getAccountById);
-
 };

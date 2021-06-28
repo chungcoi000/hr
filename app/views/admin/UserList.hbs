@@ -1,40 +1,19 @@
 <div class="form">
-    <button type="submit" class="btn add">Add new User</button>
+    <a href="/admin/createAccount"><button type="submit" class="btn add">Add new User</button></a>
     <table>
         <tr>
             <th>Username</th>
-            <th>Password</th>
             <th>Role</th>
             <th>Update</th>
             <th>Delete</th>
         </tr>
+        {{#each user}}
         <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th style="color: black;"><button>Update</button></th>
-            <th style="color: black;"><button>Delete</button></th>
+            <th>{{username}}</th>
+            <th>{{role.name}}</th>
+            <th><button>Update</button></th>
+            <th><button>Delete</button></th>
         </tr>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th style="color: black;"><button>Update</button></th>
-            <th style="color: black;"><button>Delete</button></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th style="color: black;"><button>Update</button></th>
-            <th style="color: black;"><button>Delete</button></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th style="color: black;"><button>Update</button></th>
-            <th style="color: black;"><button>Delete</button></th>
-        </tr>
+        {{/each}}
     </table>
 </div>

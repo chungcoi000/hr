@@ -6,10 +6,16 @@ const bcrypt = require("bcryptjs");
 
 exports.getAccount = async (req, res) => {
     try {
-        const user = await User.find({}).select("username role");
-        res.send(user);
+        const role = await Role.find({name: {$in: ["staff", "trainer"]}});
+
+        const user = await User.find({role}).select("username")
+            .lean().populate("role", "name", "Role");
+        // console.log(user);
+        return res.render('admin/UserList', {user: user});
+
     } catch (err) {
-        res.send({ message : "Error"})
+        console.log(err)
+        res.send({message: "Error"})
     }
 }
 
@@ -18,36 +24,36 @@ exports.getAccountById = async (req, res) => {
         const user = await User.find({_id: req.body.id}).select("username password role");
         return res.send(user);
     } catch (err) {
-        return res.send({ message : "Error "});
+        return res.send({message: "Error "});
     }
 }
 
 exports.createAccount = async (req, res) => {
     try {
-        const user = new User({
+        const user = {
             username: req.body.username,
             password: bcrypt.hashSync(req.body.password, 8),
-        });
+        };
 
-        const username = await User.findOne({username : req.body.username});
+        const username = await User.findOne({username: req.body.username});
         if (username) {
-            return res.send({ message : "Username is already in used"})
+            return res.render("admin/addUser", {
+                error: true,
+                message: "Username is already existed!"
+            });
         }
 
-        const role = await Role.findOne({name: req.body.role});
+        const role = await Role.findOne({name: {$in: ["staff", "trainer"]}});
         if (!role) {
-            return res.send({message: "Role does not exist. "});
+            return res.render("admin/addUser", {
+                error: true,
+                message: "Role doesn't exist!"
+            });
         }
 
-        if (role.name === "trainer" || role.name === "staff")
-        {
-            user.role = role._id;
-            await user.save();
-            return res.send({message: "Add successfully! "});
-        }
-
-        return res.send({ message: "Can not create this account"});
-
+        user.role = role._id;
+        await User.create(user);
+        return res.redirect("/admin/getAccount");
     } catch (err) {
         return res.send({message: "Error"});
     }
@@ -56,22 +62,32 @@ exports.createAccount = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
     try {
         await User.deleteOne({_id: req.body.id});
-        res.send({ message : "Delete account successfully"});
+        res.send({message: "Delete account successfully"});
     } catch (err) {
         return res.send({message: "Can't delete account"});
     }
 };
 
+exports.getCreateAccount = async (req, res) => {
+    try {
+        const roles = await Role.find({name: {$in: ["staff", "trainer"]}}).lean();
+        res.render("admin/addUser", {roles: roles})
+    } catch (e) {
+        res.send({message: e})
+    }
+}
+
 exports.updateAccount = async (req, res) => {
     try {
         const username = req.body.username;
-        const password = req.body.password;
+        let password = req.body.new_password;
+        password = bcrypt.hashSync(password, 8);
         const role = await Role.findOne({name: req.body.role});
         await User.updateMany(
             {_id: req.body.id},
             {username: username, password: password, role: role._id}
         );
-        res.send({message : "Update successfully"});
+        res.send({message: "Update successfully"});
     } catch (err) {
         return res.send({message: "Error"});
     }
