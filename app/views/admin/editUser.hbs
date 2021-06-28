@@ -1,41 +1,28 @@
 <div class="form">
-    <button type="submit" class="btn add">Add new User</button>
-    <table>
-        <tr>
-            <th>Username</th>
-            <th>Password</th>
-            <th>Role</th>
-            <th>Update</th>
-            <th>Delete</th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th style="color: black;"><button>Update</button></th>
-            <th style="color: black;"><button>Delete</button></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th style="color: black;"><button>Update</button></th>
-            <th style="color: black;"><button>Delete</button></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th style="color: black;"><button>Update</button></th>
-            <th style="color: black;"><button>Delete</button></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th style="color: black;"><button>Update</button></th>
-            <th style="color: black;"><button>Delete</button></th>
-        </tr>
-    </table>
+    <form action="/action_page.php">
+        <div class="container">
+            <hr>
+
+            <label for="Username"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="Username" id="Username" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+
+            <label class="label">Role</label>
+            <div class="rs-select2 js-select-simple select--no-search">
+                <select name="subject">
+                    <option disabled="disabled" selected="selected">Choose option</option>
+                    <option>Training Staff</option>
+                    <option>Trainer</option>
+                </select>
+                <div class="select-dropdown"></div>
+            </div>
+            <hr>
+
+            <button type="submit" class="Upadatebtn">Update</button>
+            <button type="submit" class="Upadatebtn">Cancel</button>
+        </div>
+    </form>
 </div>
 
