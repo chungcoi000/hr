@@ -17,21 +17,11 @@ exports.getTrainerAccount = async (req, res) => {
         }
         if (req.session && req.session.user.role === "trainer") {
             const trainer = await User.findOne({id: req.session.user._id}).select("-username -password");
-            return res.send(trainer);
-
+            return res.render("trainer/trainerProfile", {trainer : trainer});
         }
-        res.send({message: "You need to authorization "});
+        res.render("/login");
     } catch (err) {
         return res.send({message: "Error"});
-    }
-};
-
-exports.getAccountById = async (req, res) => {
-    try {
-        const user = await User.find({_id: req.body.id});
-        return res.send(user);
-    } catch (err) {
-        return res.send({message: "Error "});
     }
 };
 
@@ -42,14 +32,14 @@ exports.getTraineeAccount = async (req, res) => {
             const role = await Role.findOne({name: "trainee"});
             if (role) {
                 const user = await User.find({role: role._id});
-                return res.send(user);
+                return res.render("staff/traineeList", {user: user});
             }
         }
         if (req.session && req.session.user.role === "trainee") {
-            const trainer = await User.findOne({id: req.session.user._id}).select("-username -password");
-            return res.send(trainer);
+            const trainee = await User.findOne({id: req.session.user._id}).select("-username -password");
+            return res.render("trainee/traineeProfile",{trainee: trainee});
         }
-        res.send({message: "You need to authorization "});
+        res.redirect("/login");
 
     } catch (err) {
         console.log(err);

@@ -10,29 +10,11 @@ exports.getAccount = async (req, res) => {
 
         const user = await User.find({role}).select("username")
             .lean().populate("role", "name", "Role");
-        console.log(user[0]);
-        return res.render('admin/UserList', {user: user});
+        return res.render('admin/userList', {user: user});
 
     } catch (err) {
         console.log(err)
         res.send({message: "Error"})
-    }
-}
-
-exports.getAccountById = async (req, res) => {
-    try {
-        const user = await User.find({_id: req.body.id}).select("username password role");
-        return res.send(user);
-    } catch (err) {
-        return res.send({message: "Error "});
-    }
-}
-exports.getUpdateAccount = async (req, res) => {
-    try {
-        const roles = await Role.find({name: {$in: ["staff", "trainer"]}}).lean();
-        res.render("admin/editUser", {roles: roles})
-    } catch (e) {
-        return res.send({message: e})
     }
 }
 
@@ -51,7 +33,8 @@ exports.createAccount = async (req, res) => {
             });
         }
 
-        const role = await Role.findOne({name: {$in: ["staff", "trainer"]}});
+        const role = await Role.findOne({name: req.body.role});
+        console.log(req.body.role)
         if (!role) {
             return res.render("admin/addUser", {
                 error: true,
@@ -89,18 +72,33 @@ exports.getCreateAccount = async (req, res) => {
 
 exports.updateAccount = async (req, res) => {
     try {
+        const user_id = req.body.user_id;
         const username = req.body.username;
         let password = req.body.new_password;
-        password = bcrypt.hashSync(password, 8);
-        const role = await Role.findOne({name: {$in: ["staff", "trainer"]}});
-        await User.updateMany(
-            {_id: req.body.id},
+        password = await bcrypt.hashSync(password, 8);
+        const role = await Role.findOne({name: req.body.role});
+        console.log(user_id);
+        await User.updateOne(
+            {_id: user_id},
             {username: username, password: password, role: role._id}
         );
-        res.send({message: "Update successfully"});
+        res.redirect("/admin/getAccount");
     } catch (err) {
+        console.log(err);
         return res.send({message: "Error"});
     }
 };
 
+exports.getUpdateAccount = async (req, res) => {
+    try {
+        let id = req.query.user_id;
+        const user = await User.findOne({_id: id}).lean();
+        return res.render("admin/editUser", {
+            user: user,
+            roles: ["staff", "trainer"]
+        })
+    } catch (err) {
+        return res.send({message: "Error "});
+    }
+}
 

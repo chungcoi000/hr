@@ -13,19 +13,24 @@
 
             <label class="label">Role</label>
             <div class="rs-select2 js-select-simple select--no-search">
-                <select name="subject">
+                <select name="role">
                         <option disabled="disabled" selected="selected">Choose option</option>
                     {{#each roles}}
-                        <option name="role">{{name}}</option>
+                        <option value={{name}}>{{name}}</option>
                     {{/each}}
                 </select>
                 <div class="select-dropdown"></div>
             </div>
             <hr>
 
-            <a href="admin/UserList"><button type="submit" class="createbtn">Add</button></a>
-            <a href="admin/UserList"><button type="submit" class="createbtn">Cancel</button></a>
+            <a href="/admin/getAccount"><button type="submit" class="createbtn">Add</button></a>
+            <a><button type="submit" class="createbtn" onclick="onReturn()">Return</button></a>
         </div>
     </form>
 </div>
 
+<script>
+    function onReturn() {
+        window.location.href = "/admin/getAccount"
+    }
+</script>

@@ -1,0 +1,55 @@
+<div class="form">
+    <a href="/admin/createAccount">
+        <button type="submit" class="btn add">Add new User</button>
+    </a>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+        {{#each user}}
+            <tr>
+                <th>{{username}}</th>
+                <th>{{role.name}}</th>
+                <th>
+                    <button onclick="window.location.href='/admin/updateAccount?user_id={{_id}}'">Update</button>
+                </th>
+                <th>
+                    <button onclick="onDelete('{{_id}}')">Delete</button>
+                </th>
+            </tr>
+        {{/each}}
+    </table>
+</div>
+
+<script>
+    function onDelete(user_id) {
+        try {
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            const raw = JSON.stringify({
+                "delete_id": user_id
+            });
+
+            const requestOptions = {
+                method: 'DELETE',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("/admin/deleteAccount", requestOptions)
+                    .then(response => response.text())
+                    .then(result => {
+                        window.location.reload();
+                        console.log(result)
+                    })
+                    .catch(error => console.log('error', error));
+        } catch (e) {
+            console.log(e);
+        }
+    }
+</script>

@@ -7,11 +7,9 @@ module.exports = (app) => {
     //User Manager
     app.post("/staff/createAccount", userController.createTraineeAccount);
     app.post("/staff/deleteInfo", userController.deleteInformation);
-    app.post("/staff/getAccountById", userController.getAccountById);
     app.post("/staff/searchUser", userController.searchUser);
 
     // Course Manager
-    app.get("/staff/getCourse", courseController.getCourse);
     app.post("/staff/getCourseById", courseController.getCourseById);
     app.post("/staff/addCourse", courseController.addCourse);
     app.post("/staff/deleteCourse", courseController.deleteCourse);
@@ -27,12 +25,12 @@ module.exports = (app) => {
     app.post("/staff/updateCate", categoryController.updateCategory);
     app.post("/staff/deleteCate", categoryController.deleteCategory);
 
-    //User
-    app.get("/user/viewCourse", courseController.viewCourseAssigned);
 
     //API
     app.get("/api/getTrainee", userController.getTraineeAccount);
     app.get("/api/getTrainer", userController.getTrainerAccount);
     app.post("/api/updatePassword", userController.updatePassword);
     app.post("/api/updateInfo", userController.updateInformation);
+    app.get("/api/getCourse", courseController.getCourse);
+    app.get("/api/viewCourseAssigned", courseController.viewCourseAssigned);
 };

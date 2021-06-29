@@ -1,10 +1,11 @@
 const db = require("../models");
 const Category = db.category;
-const Course = db.course;
+
+
 exports.getCategory = async (req, res) => {
     try {
-        const category = await Category.find();
-        res.send(category);
+        const category = await Category.find({});
+        res.render("staff/categoryList", {category: category});
     } catch (err) {
         res.send({message : "Error"});
     }

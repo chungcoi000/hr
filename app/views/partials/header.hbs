@@ -2,7 +2,7 @@
     <header id="header" class="hoc clear">
         <div id="logo" class="fl_left">
             <!-- ################################################################################################ -->
-            <h1><a href="">FPT HR</a></h1>
+            <h1><a href="/home">FPT HR</a></h1>
             <!-- ################################################################################################ -->
         </div>
         <nav id="mainav" class="fl_right">
@@ -21,29 +21,34 @@
                 {{#ifCond check "===" "staff"}}
                     <li><a>User</a>
                         <ul>
-                            <li><a href="#">Trainer</a></li>
-                            <li><a href="#">Trainee</a></li>
+                            <li><a href="/api/getTrainer">Trainer</a></li>
+                            <li><a href="/api/getTrainee">Trainee</a></li>
                         </ul>
                     </li>
                     <li><a>Course</a>
-                    <ul>
-                        <li><a href="#">All Course</a></li>
-                        <li><a href="#">Add user to course</a></li>
-                    </ul>
+                        <ul>
+                            <li><a href="/api/getCourse">All Course</a></li>
+                            <li><a href="#">Add user to course</a></li>
+                        </ul>
                     </li>
-                    <li><a href="#">Categories</a></li>
+                    <li><a href="/staff/getCate">Categories</a></li>
                     <li><a href="/logout">Logout</a></li>
                 {{/ifCond}}
 
                 {{#ifCond check "===" "trainer"}}
                     <li><a href="/api/getTrainer">Profile</a></li>
-                    <li><a href="#">Course</a></li>
+                    <li><a href="/api/viewCourseAssigned">Course</a></li>
                     <li><a href="/logout">Logout</a></li>
                 {{/ifCond}}
 
                 {{#ifCond check "===" "trainee"}}
                     <li><a href="/#">Profile</a></li>
-                    <li><a href="#">Course</a></li>
+                    <li><a>Course</a>
+                        <ul>
+                            <li><a href="/api/getCourse">All Course</a></li>
+                            <li><a href="/api/viewCourseAssigned">All Courses Assigned</a></li>
+                        </ul>
+                    </li>
                     <li><a href="/logout">Logout</a></li>
                 {{/ifCond}}
             </ul>

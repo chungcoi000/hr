@@ -1,0 +1,24 @@
+<div class="form">
+    <button type="submit" class="btn add">Add new User</button>
+    <input type="text" class="search" placeholder="Search..">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Education</th>
+            <th>Bio</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+        {{#each user}}
+            <tr>
+                <th>{{this.name}}</th>
+                <th>{{this.dob}}</th>
+                <th>{{this.education}}</th>
+                <th>{{this.bio}}</th>
+                <th style="color: black;"><button>Update</button></th>
+                <th style="color: black;"><button>Delete</button></th>
+            </tr>
+        {{/each}}
+    </table>
+</div>

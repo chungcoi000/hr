@@ -1,28 +1,31 @@
 <div class="form">
-    <form action="/admin/updateAccount">
+    <form action="/admin/updateAccount" method="post">
+    {{#log}}
+        {{_id}}
+    {{/log}}
         <div class="container">
             <hr>
+            <input type="hidden" name="user_id" value={{user._id}}>
+            <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="username" id="Username" required value={{user.username}}>
 
-            <label for="Username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username" id="Username" required>
-
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="password" id="psw" required>
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="new_password" id="psw" required value={{user.password}}>
 
             <label class="label">Role</label>
             <div class="rs-select2 js-select-simple select--no-search">
-                <select name="subject">
+                <select name="role">
                     <option disabled="disabled" selected="selected">Choose option</option>
-                    <option>Training Staff</option>
-                    <option>Trainer</option>
+                        {{#each roles}}
+                            <option value={{this}}>{{this}}</option>
+                        {{/each}}
                 </select>
                 <div class="select-dropdown"></div>
             </div>
             <hr>
 
-            <button type="submit" class="Upadatebtn">Update</button>
-            <button type="submit" class="Upadatebtn">Cancel</button>
+            <button onclick="window.location.href='/admin/getAccount'">Update</button>
+            <button onclick="window.location.href='/admin/getAccount'">Cancel</button>
         </div>
     </form>
 </div>
-
