@@ -3,20 +3,23 @@
         <div class="container">
             <hr>
 
-            <label for="email"><b>Email</b></label>
-            <input type="text" name="Email" id="email" required value={{email}}>
-
             <label for="name"><b>Name</b></label>
-            <input type="text" name="name" id="name" required value={{name}}>
+            <input type="text" name="name" id="name" disabled="disabled" value={{trainer.name}}>
 
-            <label for="dob"><b>DoB</b></label>
-            <input type="text" name="dob" id="dob" required value={{dob}}>
+            <label for="dob"><b>Date of Birth</b></label>
+            <input type="text" name="dob" id="dob" disabled="disabled" value={{trainer.dob}}>
+
+            <label for="email"><b>Email</b></label>
+            <input type="text" name="email" id="email" disabled="disabled" value={{trainer.email}}>
+
+            <label for="telephone"><b>Telephone</b></label>
+            <input type="text" name="telephone" id="telephone" disabled="disabled" value={{trainer.telephone}}>
 
             <label for="education"><b>Education</b></label>
-            <input type="text" name="education" id="education" required value={{education}}>
+            <input type="text"name="education" id="education" disabled="disabled" value={{trainer.education}}>
 
             <label for="bio"><b>Bio</b></label>
-            <input type="text" name="bio" id="bio" required value={{bio}}>
+            <input type="text" name="bio" id="bio" disabled="disabled" value={{trainer.bio}}>
 
             <hr>
 

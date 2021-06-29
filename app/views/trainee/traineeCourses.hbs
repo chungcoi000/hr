@@ -1,24 +1,14 @@
 <div class="form">
     <table>
         <tr>
-            <th>CourseName</th>
+            <th>Course Name</th>
             <th>Description</th>
         </tr>
-        <tr>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-        </tr>
+        {{#each course}}
+            <tr>
+                <th>{{this.name}}</th>
+                <th>{{this.description}}</th>
+            </tr>
+        {{/each}}
     </table>
 </div>

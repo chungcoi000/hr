@@ -9,6 +9,9 @@ const User = mongoose.model(
         dob: String,
         email: String,
         education: String,
+        telephone: String,
+        toeicscore: String,
+        programlanguage: String,
         bio: String,
         role: {
             type: mongoose.Schema.Types.ObjectId,

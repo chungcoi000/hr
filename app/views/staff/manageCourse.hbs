@@ -8,11 +8,13 @@
             <th>Update</th>
             <th>Delete</th>
         </tr>
-        <tr>
-            <th></th>
-            <th></th>
-            <th style="color: black;"><button>Update</button></th>
-            <th style="color: black;"><button>Delete</button></th>
-        </tr>
+        {{#each course}}
+            <tr>
+                <th>{{this.name}}</th>
+                <th>{{this.description}}</th>
+                <th style="color: black;"><button>Update</button></th>
+                <th style="color: black;"><button>Delete</button></th>
+            </tr>
+        {{/each}}
     </table>
 </div>

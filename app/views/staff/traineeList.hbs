@@ -3,21 +3,35 @@
     <input type="text" class="search" placeholder="Search..">
     <table>
         <tr>
+            <th>Username</th>
             <th>Name</th>
             <th>Date of Birth</th>
+            <th>Email</th>
+            <th>Telephone</th>
             <th>Education</th>
+            <th>TOEIC Score</th>
+            <th>Main Language</th>
             <th>Bio</th>
             <th>Update</th>
             <th>Delete</th>
         </tr>
         {{#each user}}
             <tr>
+                <th>{{this.username}}</th>
                 <th>{{this.name}}</th>
                 <th>{{this.dob}}</th>
+                <th>{{this.email}}</th>
+                <th>{{this.telephone}}</th>
                 <th>{{this.education}}</th>
+                <th>{{this.toeicscore}}</th>
+                <th>{{this.programlanguage}}</th>
                 <th>{{this.bio}}</th>
-                <th style="color: black;"><button>Update</button></th>
-                <th style="color: black;"><button>Delete</button></th>
+                <th style="color: black;">
+                    <button>Update</button>
+                </th>
+                <th style="color: black;">
+                    <button>Delete</button>
+                </th>
             </tr>
         {{/each}}
     </table>

@@ -4,7 +4,7 @@ const Category = db.category;
 
 exports.getCategory = async (req, res) => {
     try {
-        const category = await Category.find({});
+        const category = await Category.find({}).lean();
         res.render("staff/categoryList", {category: category});
     } catch (err) {
         res.send({message : "Error"});
@@ -42,9 +42,8 @@ exports.updateCategory = async  (req, res) => {
     try {
         const name = req.body.name;
         const description = req.body.description;
-        await Category.updateMany(
+        await Category.updateOne(
             {_id: req.body.id},
-
             {name : name, description : description}
         );
         return res.send({message : "Update successfully"});

@@ -11,15 +11,15 @@ exports.getTrainerAccount = async (req, res) => {
         if (req.session && req.session.user.role === "staff") {
             const role = await Role.findOne({name: "trainer"});
             if (role) {
-                const user = await User.find({role: role._id}).select("-password");
-                return res.send(user);
+                const user = await User.find({role: role._id}).select("-password").lean();
+                return res.render("staff/trainerList", {user: user});
             }
         }
         if (req.session && req.session.user.role === "trainer") {
-            const trainer = await User.findOne({id: req.session.user._id}).select("-username -password");
-            return res.render("trainer/trainerProfile", {trainer : trainer});
+            const trainer = await User.findOne({_id: req.session.user.id}).lean();
+            return res.render("trainer/trainerProfile", {trainer: trainer});
         }
-        res.render("/login");
+        res.redirect("/login");
     } catch (err) {
         return res.send({message: "Error"});
     }
@@ -31,13 +31,13 @@ exports.getTraineeAccount = async (req, res) => {
         if (req.session && req.session.user.role === "staff") {
             const role = await Role.findOne({name: "trainee"});
             if (role) {
-                const user = await User.find({role: role._id});
+                const user = await User.find({role: role._id}).lean();
                 return res.render("staff/traineeList", {user: user});
             }
         }
         if (req.session && req.session.user.role === "trainee") {
-            const trainee = await User.findOne({id: req.session.user._id}).select("-username -password");
-            return res.render("trainee/traineeProfile",{trainee: trainee});
+            const trainee = await User.findOne({_id: req.session.user.id}).lean();
+            return res.render("trainee/traineeProfile", {trainee: trainee});
         }
         res.redirect("/login");
 
@@ -91,7 +91,7 @@ exports.deleteInformation = async (req, res) => {
             await User.deleteOne({_id: req.body.id});
             res.send({message: "Delete account successfully"});
         } else {
-            res.send({message: "Only for staff "});
+            res.redirect();
         }
     } catch (err) {
         return res.send({message: err});
@@ -103,16 +103,22 @@ exports.updateInformation = async (req, res) => {
         const name = req.body.name;
         const dob = req.body.dob;
         const email = req.body.email;
+        const telephone = req.body.telephone;
         const education = req.body.education;
+        const toeicscore = req.body.toeicscore;
+        const programlanguage = req.body.programlanguage;
         const bio = req.body.bio;
 
         if (!req.body.id) {
             return res.send({message: "Id not found"});
         }
 
-        await User.updateMany(
+        await User.updateOne(
             {_id: req.body.id},
-            {name: name, dob: dob, email: email, education: education, bio: bio}
+            {
+                name: name, dob: dob, email: email, telephone: telephone, education: education,
+                toeicscore: toeicscore, programlanguage: programlanguage, bio: bio
+            }
         );
         res.send({message: "Update successfully"});
     } catch (err) {
@@ -132,9 +138,8 @@ exports.updatePassword = async (req, res) => {
         );
 
         console.log(comparePassword);
-        if (comparePassword === false)
-        {
-            return res.send({ message : "Password doesn't match"});
+        if (comparePassword === false) {
+            return res.send({message: "Password doesn't match"});
         }
 
         newPassword = bcrypt.hashSync(newPassword, 8);
@@ -147,8 +152,7 @@ exports.updatePassword = async (req, res) => {
 
 exports.searchUser = async (req, res) => {
     try {
-        if (req.session && req.session.role.name === "staff")
-        {
+        if (req.session && req.session.role.name === "staff") {
             let query = req.body.query;
 
             const trainee = await User.find(
