@@ -6,14 +6,20 @@ module.exports = (app) => {
     //Staff
     //User Manager
     app.post("/staff/createAccount", userController.createTraineeAccount);
-    app.post("/staff/deleteInfo", userController.deleteInformation);
+    app.get("/staff/createAccount", userController.getCreateAccount);
+    app.post("/staff/deleteAccount", userController.deleteAccount);
     app.post("/staff/searchUser", userController.searchUser);
 
     // Course Manager
     app.post("/staff/getCourseById", courseController.getCourseById);
+
     app.post("/staff/addCourse", courseController.addCourse);
+    app.get("/staff/addCourse", courseController.getAddCourse);
+
     app.post("/staff/deleteCourse", courseController.deleteCourse);
     app.post("/staff/updateCourse", courseController.updateCourse);
+    app.get("/staff/updateCourse", courseController.getUpdateCourse);
+
     app.get("/staff/courseCate", courseController.getCourseFromCategory);
     app.post("/staff/addCourseToUser", courseController.addUserToCourse);
     app.post("/staff/deleteCourseFromUser", courseController.deleteUserFromCourse);

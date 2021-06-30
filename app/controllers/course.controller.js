@@ -6,7 +6,9 @@ const Category = db.category;
 //Course Management
 exports.getCourse = async (req, res) => {
     try {
-        const course = await Course.find({}).lean();
+        const category = await Category.find({});
+        const course = await Course.find({category})
+            .lean().populate("category", "name", "Category");
         if (req.session && req.session.user.role === "staff") {
             return res.render("staff/manageCourse", {course: course});
         }
@@ -28,71 +30,96 @@ exports.getCourseById = async (req, res) => {
 
 exports.addCourse = async (req, res) => {
     try {
-        const course = new Course({
+        const course = {
             name: req.body.name,
             description: req.body.description
-        });
+        };
 
         const courseName = await Course.findOne({name: req.body.name});
         if (courseName) {
-            return res.send({message: "Course is already in database"});
+            return res.render("staff/addCourse", {
+                error: true,
+                message: "Course is already in database!"
+            });
         }
 
         const category = await Category.findOne({name: req.body.category});
         if (!category) {
-            return res.send({message: "Category doesn't exist"});
+            return res.render("staff/addCourse", {
+                error: true,
+                message: "Category doesn't exist!"
+            });
         }
 
         course.category = category._id;
-        await course.save();
-
-        res.send({message: "Add course successfully"});
+        await Course.create(course);
+        return res.redirect("/admin/getAccount");
 
     } catch (err) {
         res.send({message: err});
     }
 }
 
+exports.getAddCourse = async (req, res) => {
+    try {
+        const categories = await Category.find({}).lean();
+        res.render("staff/addCourse", {categories: categories})
+    } catch (err) {
+        return res.send({message: "Error"});
+    }
+}
+
+
 exports.updateCourse = async (req, res) => {
     try {
+        const course_id = req.body.course_id;
         const name = req.body.name;
         const description = req.body.description;
         const category = await Category.findOne({name: req.body.category});
-        if (category) {
-            await Course.updateMany(
-                {_id: req.body.id},
-                {name: name, description: description, category: category._id}
-            );
-            return res.send({message: "Update course successfully!"});
-        }
-        return res.send({message: "Category doesn't existed"});
+
+        await Course.updateOne(
+            {_id: course_id},
+            {name: name, description: description, category: category._id}
+        );
+        console.log(category)
+        res.redirect("/api/getCourse");
+
     } catch (err) {
-        res.send({message: err});
+        res.send({message: "Error"});
     }
 };
 
+exports.getUpdateCourse = async (req, res) => {
+    try {
+        let id = req.query.course_id;
+        const course = await Course.findOne({_id: id}).lean();
+        const categories = await Category.find({}).lean();
+        return res.render("staff/courseUpdate", {
+            course: course,
+            categories: categories
+        })
+    } catch (err) {
+        console.log(err);
+        return res.send({message: "Error "});
+    }
+}
+
 exports.deleteCourse = async (req, res) => {
     try {
-        await Course.deleteOne({_id: req.body.id});
-        res.send({message: "Delete course successfully!"});
+        const deleteId = req.body.delete_id;
+        await Course.deleteOne({_id: deleteId});
+        res.render("staff/manageCourse");
     } catch (err) {
         res.send({message: "Can delete course"});
     }
 };
 
-exports.findCourse = async (req, res) => {
-    try {
 
-    } catch (err) {
-        return res.send({message: "Error"})
-    }
-};
 //Course Category
 
 exports.getCourseFromCategory = async (req, res) => {
     try {
         const category = await Category.findOne();
-        console.log(category);
         if (category) {
             const course = await Course.find({category: category._id});
             return res.send(course);

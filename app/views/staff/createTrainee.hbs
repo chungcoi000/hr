@@ -1,25 +1,30 @@
 <div class="form">
-    <form action="/staff/createAccount">
+    <form action="/staff/createAccount" method="post">
         <div class="container">
+            {{#if error}}
+                <p class="danger">{{message}}</p>
+            {{/if}}
             <hr>
 
-            <label for="Username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username" id="Username" required>
+            <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="username" id="username" required>
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="password" id="psw" required>
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" id="password" required>
 
             <label class="label">Role</label>
             <div class="rs-select2 js-select-simple select--no-search">
-                <select name="subject">
-                    <option>Trainee</option>
+                <select name="role">
+                    {{#each role}}
+                        <option value={{name}}>{{name}}</option>
+                    {{/each}}
                 </select>
                 <div class="select-dropdown"></div>
             </div>
             <hr>
 
-            <button type="submit" class="btn">Add</button>
-            <button type="submit" class="btn">Cancel</button>
+            <a href="/api/getTrainee"><button type="submit" class="btn">Add</button></a>
+            <a><button type="submit" class="btn" onclick="window.location.href = '/api/getTrainee'">Return</button></a>
         </div>
     </form>
 </div>

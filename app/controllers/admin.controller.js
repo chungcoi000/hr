@@ -34,7 +34,6 @@ exports.createAccount = async (req, res) => {
         }
 
         const role = await Role.findOne({name: req.body.role});
-        console.log(req.body.role)
         if (!role) {
             return res.render("admin/addUser", {
                 error: true,
@@ -62,7 +61,6 @@ exports.getCreateAccount = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
     try {
         const deleteId = req.body.delete_id;
-        console.log(deleteId)
         await User.deleteOne({_id: deleteId});
         res.render("admin/userList");
     } catch (err) {
@@ -77,14 +75,12 @@ exports.updateAccount = async (req, res) => {
         let password = req.body.new_password;
         password = await bcrypt.hashSync(password, 8);
         const role = await Role.findOne({name: req.body.role});
-        console.log(user_id);
         await User.updateOne(
             {_id: user_id},
             {username: username, password: password, role: role._id}
         );
         res.redirect("/admin/getAccount");
     } catch (err) {
-        console.log(err);
         return res.send({message: "Error"});
     }
 };

@@ -37,7 +37,6 @@ exports.getTraineeAccount = async (req, res) => {
         }
         if (req.session && req.session.user.role === "trainee") {
             const trainee = await User.findOne({_id: req.session.user.id}).lean();
-            // trainee.name = trainee.name.replace(/( )/, "&nbsp;");
             return res.render("trainee/traineeProfile", {
                 trainee: trainee
             });
@@ -52,48 +51,56 @@ exports.getTraineeAccount = async (req, res) => {
 exports.createTraineeAccount = async (req, res) => {
     try {
         if (req.session && req.session.user.role === "staff") {
-            const user = new User({
+            const user = {
                 username: req.body.username,
                 password: bcrypt.hashSync(req.body.password, 8),
-                name: req.body.name,
-                dob: req.body.dob,
-                email: req.body.email,
-                education: req.body.education,
-                bio: req.body.bio
-            });
+            };
 
             const username = await User.findOne({username: req.body.username});
             if (username) {
-                return res.send({message: "Username is already in used"})
+                return res.render("staff/createTrainee", {
+                    error: true,
+                    message: "Username is already in used"
+                })
             }
 
-            const role = await Role.findOne({name: req.body.role});
+            const role = await Role.findOne({name: "trainee"});
             if (!role) {
-                return res.send({message: "Role does not exist. "});
+                return res.render("staff/createTrainee", {
+                    error: true,
+                    message: "Role doesn't exist!"
+                });
             }
 
-            if (role.name === "trainee") {
-                user.role = role._id;
-                await user.save();
-                return res.send({message: "Add successfully! "});
-            }
+            user.role = role._id;
+            await User.create(user);
+            return res.redirect("/api/getTrainee");
 
-            res.send({message: "Can not add this account"});
         } else {
-            res.send({message: "Only for staff "});
+            res.redirect("/api/getTrainee");
         }
     } catch (err) {
         return res.send({message: "Error"});
     }
 };
 
-exports.deleteInformation = async (req, res) => {
+exports.getCreateAccount = async (req, res) => {
+    try {
+        const role = await Role.find({name: "trainee"}).lean();
+        res.render("staff/createTrainee", {role: role});
+    } catch (err) {
+        return res.send({message: "Error"});
+    }
+}
+
+exports.deleteAccount = async (req, res) => {
     try {
         if (req.session && req.session.user.role === "staff") {
-            await User.deleteOne({_id: req.body.id});
+            const deleteId = req.body.delete_id;
+            await User.deleteOne({_id: deleteId});
             res.send({message: "Delete account successfully"});
         } else {
-            res.redirect();
+            res.render("staff/traineeList");
         }
     } catch (err) {
         return res.send({message: err});
@@ -139,7 +146,6 @@ exports.updatePassword = async (req, res) => {
             user.password,
         );
 
-        console.log(comparePassword);
         if (comparePassword === false) {
             return res.send({message: "Password doesn't match"});
         }

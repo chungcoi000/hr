@@ -1,27 +1,29 @@
 <div class="form">
-    <form action="/staff/updateCourse">
+    <form action="/staff/updateCourse" method="post">
         <div class="container">
             <hr>
+            <input type="hidden" name="course_id" value="{{course._id}}">
 
             <label for="name"><b>Name</b></label>
-            <input type="text" placeholder="Enter Course's name" name="name" id="name" required>
+            <input type="text" name="name" id="name" required value="{{course.name}}">
 
-            <label for="psw"><b>Description</b></label>
-            <input type="text" placeholder="Enter Description" name="description" id="description" required>
+            <label for="description"><b>Description</b></label>
+            <input type="text" name="description" id="description" required value="{{course.description}}">
 
             <label class="label">Category</label>
             <div class="rs-select2 js-select-simple select--no-search">
                 <select name="category">
-                    <option>IT</option>
-                    <option>Business</option>
-                    <option>Design</option>
+                    <option disabled="disabled" selected="selected">Choose option</option>
+                    {{#each categories}}
+                        <option value={{this.name}}>{{this.name}}</option>
+                    {{/each}}
                 </select>
                 <div class="select-dropdown"></div>
             </div>
             <hr>
 
-            <button type="submit" class="btn">Update</button>
-            <button type="submit" class="btn">Cancel</button>
+            <button type="submit" class="btn" onclick="window.location.href='/api/getCourse'">Update</button>
+            <button type="submit" class="btn" onclick="window.location.href='/api/getCourse'">Cancel</button>
         </div>
     </form>
 </div>
