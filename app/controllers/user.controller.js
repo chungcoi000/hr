@@ -37,12 +37,14 @@ exports.getTraineeAccount = async (req, res) => {
         }
         if (req.session && req.session.user.role === "trainee") {
             const trainee = await User.findOne({_id: req.session.user.id}).lean();
-            return res.render("trainee/traineeProfile", {trainee: trainee});
+            // trainee.name = trainee.name.replace(/( )/, "&nbsp;");
+            return res.render("trainee/traineeProfile", {
+                trainee: trainee
+            });
         }
         res.redirect("/login");
 
     } catch (err) {
-        console.log(err);
         res.send({message: "Error"});
     }
 };
