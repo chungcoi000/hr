@@ -1,18 +1,20 @@
 <div class="form">
-    <form action="/staff/updateCate">
+    <form action="/staff/updateCate" method="post">
         <div class="container">
             <hr>
-
+            <input type="hidden" name="cate_id" value={{category._id}}>
             <label for="name"><b>Name</b></label>
-            <input type="text" placeholder="Enter Category's name" name="name" id="name" required>
+            <input type="text" placeholder="Enter Category's name" name="name" id="name" required
+                   value="{{category.name}}">
 
             <label for="psw"><b>Description</b></label>
-            <input type="text" placeholder="Enter Description" name="description" id="description" required>
+            <input type="text" placeholder="Enter Description" name="description" id="description" required
+                   value="{{category.description}}">
 
             <hr>
 
-            <button type="submit" class="btn">Update</button>
-            <button type="submit" class="btn">Cancel</button>
+            <button type="submit" onclick="window.location.href='/staff/getCate'">Update</button>
+            <button type="submit" onclick="window.location.href='/staff/getCate'">Cancel</button>
         </div>
     </form>
 </div>

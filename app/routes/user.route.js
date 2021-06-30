@@ -22,7 +22,9 @@ module.exports = (app) => {
     //Category Manager
     app.get("/staff/getCate", categoryController.getCategory);
     app.post("/staff/addCate", categoryController.addCategory);
+    app.get("/staff/addCate", categoryController.getAddCategory);
     app.post("/staff/updateCate", categoryController.updateCategory);
+    app.get("/staff/updateCate", categoryController.getUpdateCategory);
     app.post("/staff/deleteCate", categoryController.deleteCategory);
 
 

@@ -50,17 +50,6 @@ exports.createAccount = async (req, res) => {
     }
 };
 
-exports.deleteAccount = async (req, res) => {
-    try {
-        const deleteId = req.body.delete_id;
-        console.log(deleteId)
-        await User.deleteOne({_id: deleteId});
-        res.send({message: "Delete successfully"});
-    } catch (err) {
-        return res.send({message: "Can't delete account"});
-    }
-};
-
 exports.getCreateAccount = async (req, res) => {
     try {
         const roles = await Role.find({name: {$in: ["staff", "trainer"]}}).lean();
@@ -69,6 +58,17 @@ exports.getCreateAccount = async (req, res) => {
         res.send({message: e})
     }
 }
+
+exports.deleteAccount = async (req, res) => {
+    try {
+        const deleteId = req.body.delete_id;
+        console.log(deleteId)
+        await User.deleteOne({_id: deleteId});
+        res.render("admin/userList");
+    } catch (err) {
+        return res.send({message: "Can't delete account"});
+    }
+};
 
 exports.updateAccount = async (req, res) => {
     try {

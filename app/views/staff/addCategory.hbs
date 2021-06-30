@@ -1,16 +1,18 @@
 <div class="form">
-    <form action="/staff/addCate">
+    <form action="/staff/addCate" method="post">
         <div class="container">
+            {{#if error}}
+                <p class="danger">{{message}}</p>
+            {{/if}}
             <hr>
+            <label for="name"><b>Category Name</b></label>
+            <input type="text" placeholder="Enter Category Name" name="name" id="name" required>
 
-            <label for="name"><b>Name</b></label>
-            <input type="text" name="name" id="name" required>
+            <label for="description"><b>Description</b></label>
+            <input type="text" placeholder="Enter Description" name="description" id="description" required>
 
-            <label for="psw"><b>Description</b></label>
-            <input type="text" name="description" id="description" required>
-
-            <button type="submit" class="btn">Add</button>
-            <button type="submit" class="btn">Cancel</button>
+            <a href="/staff/getCate"><button type="submit" class="btn">Add</button></a>
+            <a><button type="submit" class="btn" onclick="window.location.href='/staff/getCate'">Cancel</button></a>
             <hr>
         </div>
     </form>

@@ -7,49 +7,74 @@ exports.getCategory = async (req, res) => {
         const category = await Category.find({}).lean();
         res.render("staff/categoryList", {category: category});
     } catch (err) {
-        res.send({message : "Error"});
+        res.send({message: "Error"});
     }
 };
 
 exports.addCategory = async (req, res) => {
     try {
         const category = new Category({
-            name : req.body.name,
-            description : req.body.description
+            name: req.body.name,
+            description: req.body.description
         });
 
-        const name = await Category.findOne({name : req.body.name});
+        const name = await Category.findOne({name: req.body.name});
         if (name) {
-            return res.send({ message : "Course is existed in category"});
+            return res.render("staff/addCategory", {
+                error: true,
+                message: "Course is existed in category"
+            });
         }
         await category.save();
-        return res.send({message : "Category add successfully"});
+        return res.redirect("/staff/getCate");
     } catch (err) {
         return res.send({message: "Error"});
     }
 };
+
+exports.getAddCategory =  async (req, res) => {
+    try{
+        res.render("staff/addCategory");
+    } catch (err) {
+        res.send({message: err})
+    }
+}
 
 exports.deleteCategory = async (req, res) => {
     try {
-        await Category.deleteOne({_id: req.body.id});
-        res.send({ message : "Delete category successfully"});
+        const deleteId = req.body.delete_id;
+        await Category.deleteOne({_id: deleteId});
+        res.render("staff/categoryList");
     } catch (err) {
         return res.send({message: "Error"});
     }
 };
 
-exports.updateCategory = async  (req, res) => {
+exports.updateCategory = async (req, res) => {
     try {
+        const cate_id = req.body.cate_id;
         const name = req.body.name;
         const description = req.body.description;
         await Category.updateOne(
-            {_id: req.body.id},
-            {name : name, description : description}
+            {_id: cate_id},
+            {name: name, description: description}
         );
-        return res.send({message : "Update successfully"});
+        return res.redirect("/staff/getCate");
     } catch (err) {
         return res.send({message: "Error"});
     }
 };
+
+exports.getUpdateCategory = async (req, res) => {
+    try {
+        let id = req.query.cate_id;
+        const category = await Category.findOne({_id: id}).lean();
+        return res.render("staff/categoryUpdate", {
+            category: category
+        })
+    } catch (err) {
+        return res.send({message: "Error"})
+    }
+}
 
 

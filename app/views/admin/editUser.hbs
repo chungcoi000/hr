@@ -1,8 +1,5 @@
 <div class="form">
     <form action="/admin/updateAccount" method="post">
-    {{#log}}
-        {{_id}}
-    {{/log}}
         <div class="container">
             <hr>
             <input type="hidden" name="user_id" value={{user._id}}>
@@ -24,8 +21,8 @@
             </div>
             <hr>
 
-            <button onclick="window.location.href='/admin/getAccount'">Update</button>
-            <button onclick="window.location.href='/admin/getAccount'">Cancel</button>
+            <button type="submit" onclick="window.location.href='/admin/getAccount'">Update</button>
+            <button type="submit" onclick="window.location.href='/admin/getAccount'">Cancel</button>
         </div>
     </form>
 </div>
