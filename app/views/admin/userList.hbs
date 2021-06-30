@@ -14,10 +14,10 @@
                 <th>{{username}}</th>
                 <th>{{role.name}}</th>
                 <th>
-                    <button onclick="window.location.href='/admin/updateAccount?user_id={{_id}}'">Update</button>
+                    <button class="btn add" onclick="window.location.href='/admin/updateAccount?user_id={{_id}}'">Update</button>
                 </th>
                 <th>
-                    <button onclick="onDelete('{{_id}}')">Delete</button>
+                    <button class="btn add" onclick="onDelete('{{_id}}')">Delete</button>
                 </th>
             </tr>
         {{/each}}

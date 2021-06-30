@@ -1,6 +1,6 @@
 <div class="form">
     <button type="submit" class="btn add">Add Course</button>
-    <input type="text" class="search" placeholder="Search..">
+    <input type="text" class="find" placeholder="Search..">
     <table>
         <tr>
             <th>CourseName</th>
@@ -12,8 +12,8 @@
             <tr>
                 <th>{{this.name}}</th>
                 <th>{{this.description}}</th>
-                <th style="color: black;"><button>Update</button></th>
-                <th style="color: black;"><button>Delete</button></th>
+                <th style="color: black;"><button class="btn add">Update</button></th>
+                <th style="color: black;"><button class="btn add">Delete</button></th>
             </tr>
         {{/each}}
     </table>
