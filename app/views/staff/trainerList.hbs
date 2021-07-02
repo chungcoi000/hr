@@ -9,6 +9,7 @@
             <th>Telephone</th>
             <th>Education</th>
             <th>Bio</th>
+            <th>Course</th>
             <th>Update</th>
             <th>Delete</th>
         </tr>
@@ -21,6 +22,11 @@
                 <th>{{this.telephone}}</th>
                 <th>{{this.education}}</th>
                 <th>{{this.bio}}</th>
+                <th>
+                    {{#each courseAssign}}
+                        {{this.name}} <br>
+                    {{/each}}
+                </th>
                 <th style="color: black;">
                     <button class="btn add">Update</button>
                 </th>

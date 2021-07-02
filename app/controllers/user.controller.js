@@ -11,13 +11,17 @@ exports.getTrainerAccount = async (req, res) => {
         if (req.session && req.session.user.role === "staff") {
             const role = await Role.findOne({name: "trainer"});
             if (role) {
-                const user = await User.find({role: role._id}).select("-password").lean();
+                const user = await User.find({role: role._id}).populate({
+                    path: 'courseAssign',
+                    model: "Course",
+                    select: "name description category"
+                }).lean();
                 return res.render("staff/trainerList", {user: user});
             }
         }
         if (req.session && req.session.user.role === "trainer") {
-            const trainer = await User.findOne({_id: req.session.user.id}).lean();
-            return res.render("trainer/trainerProfile", {trainer: trainer});
+            const user = await User.findOne({_id: req.session.user.id}).lean();
+            return res.render("trainer/trainerProfile", {user: user});
         }
         res.redirect("/login");
     } catch (err) {
@@ -31,19 +35,25 @@ exports.getTraineeAccount = async (req, res) => {
         if (req.session && req.session.user.role === "staff") {
             const role = await Role.findOne({name: "trainee"});
             if (role) {
-                const user = await User.find({role: role._id}).lean();
+                const user = await User.find({role: role._id}).populate({
+                    path: 'courseAssign',
+                    model: "Course",
+                    select: "name description category"
+                }).lean();
+                console.log(user);
                 return res.render("staff/traineeList", {user: user});
             }
         }
         if (req.session && req.session.user.role === "trainee") {
-            const trainee = await User.findOne({_id: req.session.user.id}).lean();
+            const user = await User.findOne({_id: req.session.user.id}).lean();
             return res.render("trainee/traineeProfile", {
-                trainee: trainee
+                user: user
             });
         }
         res.redirect("/login");
 
     } catch (err) {
+        console.log(err);
         res.send({message: "Error"});
     }
 };
@@ -109,6 +119,7 @@ exports.deleteAccount = async (req, res) => {
 
 exports.updateInformation = async (req, res) => {
     try {
+        const user_id = req.body.user_id;
         const name = req.body.name;
         const dob = req.body.dob;
         const email = req.body.email;
@@ -118,28 +129,43 @@ exports.updateInformation = async (req, res) => {
         const programlanguage = req.body.programlanguage;
         const bio = req.body.bio;
 
-        if (!req.body.id) {
-            return res.send({message: "Id not found"});
-        }
-
         await User.updateOne(
-            {_id: req.body.id},
+            {_id: user_id},
             {
                 name: name, dob: dob, email: email, telephone: telephone, education: education,
                 toeicscore: toeicscore, programlanguage: programlanguage, bio: bio
             }
         );
-        res.send({message: "Update successfully"});
+        res.redirect("/api/getTrainer")
+
     } catch (err) {
         res.send({message: err});
     }
 };
 
+exports.getUpdateInformation = async (req, res) => {
+    try {
+        let id = req.query.user_id;
+        // const role = await Role.find({});
+        console.log(id);
+        const user = await User.findOne({_id: id}).lean();
+        return res.render("trainer/trainerUpdateProfile", {
+            user: user
+        })
+    } catch (e) {
+        return res.send({message: "Error "});
+    }
+}
+
 exports.updatePassword = async (req, res) => {
     try {
-        const user = await User.findOne({_id: req.body.id});
+        const user_id = req.body.user_id;
+        const user = await User.findOne({_id: user_id})
+            .populate("role", "name", "Role");
         const currentPassword = req.body.password;
         let newPassword = req.body.new_password;
+
+        console.log(user);
 
         const comparePassword = await bcrypt.compareSync(
             currentPassword,
@@ -147,16 +173,55 @@ exports.updatePassword = async (req, res) => {
         );
 
         if (comparePassword === false) {
-            return res.send({message: "Password doesn't match"});
-        }
+            if (user.role.name === "trainer") {
+                return res.render("trainer/trainerPassword", {
+                    error: true,
+                    message: "Password does not match with password in database"
+                });
+            }
 
+            if (user.role.name === "trainee") {
+                return res.render("trainee/traineePassword", {
+                    error: true,
+                    message: "Password does not match with password in database"
+                });
+            }
+        }
         newPassword = bcrypt.hashSync(newPassword, 8);
         await user.updateOne({password: newPassword});
-        return res.send({message: "Password has been updated"});
+        if (user.role.name === "trainer") {
+            return res.redirect("/api/getTrainer");
+        }
+
+        if (user.role.name === "trainee") {
+            return res.redirect("/api/getTrainee");
+        }
+
     } catch (err) {
+        console.log(err);
         return res.send({message: "Error "});
     }
 };
+
+exports.getUpdatePassword = async (req, res) => {
+    try {
+        let id = req.query.user_id;
+        const user = await User.findOne({_id: id}).populate("role", "name", "Role").lean();
+        if (user.role.name === "trainer") {
+            return res.render("trainer/trainerPassword", {
+                user: user
+            })
+        }
+
+        if (user.role.name === "trainee") {
+            return res.render("trainee/traineePassword", {
+                user: user
+            })
+        }
+    } catch (err) {
+        return res.send({message: "Error "});
+    }
+}
 
 exports.searchUser = async (req, res) => {
     try {

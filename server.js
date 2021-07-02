@@ -7,7 +7,8 @@ const Category = db.category;
 const Role = db.role;
 const session = require('express-session');
 const path = require('path');
-const hbs = require("handlebars")
+const hbs = require("handlebars");
+const MongoStore = require('connect-mongo');
 
 const app = express();
 
@@ -70,7 +71,10 @@ app.use(session({
     resave: true,
     saveUninitialized: true,
     secret: 'humanResourceManagement',
-    cookie: {maxAge: 60000}
+    store: MongoStore.create({
+        mongoUrl: dbConfig.url,
+        ttl: 14 * 24 * 60 * 60 // = 14 days. Default
+    }),
 }));
 
 app.get("/home", (req, res) => {

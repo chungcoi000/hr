@@ -25,7 +25,6 @@ exports.login = async (req, res) => {
                     message: "Incorrect password"
                 });
             }
-
             req.session.user = {
                 id: user._id,
                 username: user.username,

@@ -3,11 +3,13 @@
         <tr>
             <th>Course Name</th>
             <th>Description</th>
+            <th>Category</th>
         </tr>
         {{#each course}}
             <tr>
                 <th>{{this.name}}</th>
                 <th>{{this.description}}</th>
+                <th>{{this.category.name}}</th>
             </tr>
         {{/each}}
     </table>

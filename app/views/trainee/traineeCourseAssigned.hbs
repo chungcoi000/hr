@@ -1,25 +1,19 @@
 <div class="form">
-    <button type="submit" class="btn add">All Course</button>
+    <a href="/api/viewCourseAssigned"></a>
+
     <table>
         <tr>
-            <th>CourseName</th>
+            <th>Course Name</th>
             <th>Description</th>
+            <th>Category</th>
         </tr>
-        <tr>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-        </tr>
+
+        {{#each user.courseAssign}}
+            <tr>
+                <th>{{this.name}}</th>
+                <th>{{this.description}}</th>
+                <th>{{this.category.name}}</th>
+            </tr>
+        {{/each}}s
     </table>
 </div>

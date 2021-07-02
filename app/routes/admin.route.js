@@ -4,7 +4,7 @@ module.exports = (app) => {
     app.use(function (req, res, next){
         try {
             if (req.session ) {
-                if(req.session.user.role === "admin") next();
+                if(req.session.user.role.name === "admin") next();
             }
         } catch (err) {
             console.log(err);

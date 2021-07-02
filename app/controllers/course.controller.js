@@ -99,7 +99,6 @@ exports.getUpdateCourse = async (req, res) => {
             categories: categories
         })
     } catch (err) {
-        console.log(err);
         return res.send({message: "Error "});
     }
 }
@@ -110,10 +109,9 @@ exports.deleteCourse = async (req, res) => {
         await Course.deleteOne({_id: deleteId});
         res.render("staff/manageCourse");
     } catch (err) {
-        res.send({message: "Can delete course"});
+        res.send({message: "Error"});
     }
 };
-
 
 //Course Category
 
@@ -148,6 +146,7 @@ exports.addUserToCourse = async (req, res) => {
             await User.findOne({_id: user}).catch(err => {
                 res.send({message: err})
             });
+
             await User.updateOne({
                 _id: user
             }, {
@@ -201,13 +200,38 @@ exports.deleteUserFromCourse = async (req, res) => {
 
 exports.viewCourseAssigned = async (req, res) => {
     try {
-        const user = req.session.user;
-        if (user) {
-            const course = await User.findOne({_id: user.id})
-                .populate({path: 'courseAssign', model: "Course", select: "name description category"});
-            return res.send(course);
+        const session = req.session.user;
+        if (session.role === "trainer") {
+            const user = await User.findOne({_id: session.id})
+                .populate(
+                    {
+                        path: 'courseAssign',
+                        model: "Course",
+                        select: "name description category",
+                        populate: {
+                            path: 'category',
+                            model: "Category",
+                            select: "name"
+                        }
+                    },
+                ).lean();
+            return res.render("trainer/trainerCourseAssigned", {user: user});
         }
-        return res.send({message: "No session provided"})
+        if (session.role === "trainee") {
+            const user = await User.findOne({_id: session.id})
+                .populate({
+                    path: 'courseAssign',
+                    model: "Course",
+                    select: "name description category",
+                    populate: {
+                        path: 'category',
+                        model: "Category",
+                        select: "name"
+                    }
+                }).lean();
+            return res.render("trainee/traineeCourseAssigned", {user: user});
+        }
+        return res.redirect("/login");
     } catch (err) {
         console.log(err);
         return res.send({message: "Error"});

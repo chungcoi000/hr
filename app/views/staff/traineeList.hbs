@@ -14,6 +14,7 @@
             <th>TOEIC Score</th>
             <th>Main Language</th>
             <th>Bio</th>
+            <th>Course</th>
             <th>Update</th>
             <th>Delete</th>
         </tr>
@@ -28,6 +29,11 @@
                 <th>{{this.toeicscore}}</th>
                 <th>{{this.programlanguage}}</th>
                 <th>{{this.bio}}</th>
+                <th>
+                    {{#each courseAssign}}
+                        {{this.name}} <br>
+                    {{/each}}
+                </th>
                 <th>
                     <button class="btn">Update</button>
                 </th>
