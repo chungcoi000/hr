@@ -13,7 +13,6 @@ module.exports = (app) => {
     app.post("/staff/searchUser", userController.searchUser);
 
     // Course Manager
-    app.post("/staff/getCourseById", courseController.getCourseById);
 
     app.post("/staff/addCourse", courseController.addCourse);
     app.get("/staff/addCourse", courseController.getAddCourse);
@@ -42,6 +41,7 @@ module.exports = (app) => {
 
     app.post("/staff/deleteCate", categoryController.deleteCategory);
 
+    app.post("/staff/searchCate", categoryController.searchCategory);
 
     //API
     app.get("/api/getTrainee", userController.getTraineeAccount);

@@ -77,4 +77,29 @@ exports.getUpdateCategory = async (req, res) => {
     }
 }
 
+exports.searchCategory = async (req, res) => {
+    try {
+        let query = req.body.query;
+        let filter = {
+            $or: [
+                {name: {$regex: query, $options: 'i'}},
+                {description: {$regex: query, $options: 'i'}}
+            ]
+        }
+        if (!query) {
+            filter = {};
+        }
+        const category = await Category.find(filter).lean();
+
+        if (category.length === 0) {
+            return res.send({message: "Can't find anything"});
+        }
+
+        res.render("staff/categoryList", {category: category})
+
+    } catch (err) {
+        return res.send({message: "Error"})
+    }
+}
+
 

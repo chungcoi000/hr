@@ -2,7 +2,10 @@
     <a href="/staff/addCourse">
         <button type="submit" class="btn add">Add Course</button>
     </a>
-    <input type="text" class="find" placeholder="Search..">
+    <form action="/staff/searchCourse" method="post">
+        <input type="text" class="find" name="query" placeholder="Search..">
+        <input type="submit">
+    </form>
     <table>
         <tr>
             <th>Course Name</th>

@@ -2,7 +2,10 @@
     <a href="/staff/createAccount">
         <button type="submit" class="btn add">Add new User</button>
     </a>
-    <input type="text" class="find" placeholder="Search..">
+    <form action="/api/getTrainee">
+        <input id="searchfield" type="text" class="find" name="query" placeholder="Search..">
+        <input type="submit" onsubmit=searchUser()>
+    </form>
     <table>
         <tr>
             <th>Username</th>
@@ -35,10 +38,10 @@
                     {{/each}}
                 </th>
                 <th>
-                    <button class="btn">Update</button>
+                    <a class="btn add" href='/api/updateInfo?user_id={{_id}}'>Update</a>
                 </th>
                 <th>
-                    <button class="btn" onclick="onDelete('{{_id}}')">Delete</button>
+                    <a class="btn add" onclick="onDelete('{{_id}}')">Delete</a>
                 </th>
             </tr>
         {{/each}}
@@ -72,5 +75,22 @@
         } catch (e) {
             console.log(e);
         }
+    }
+
+    function searchUser() {
+        const query = document.getElementById("searchfield").value
+        var myHeaders = new Headers();
+        myHeaders.append("Cookie", "connect.sid=s%3AB5qcQ_O0Xs6QfcmBSu6x6H6CD0dxlDDz.B1Y1k4rKPEbEpRIt%2FDJ5gb%2FxP6KueZANOGTM0M8pt%2B4");
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch(`http://localhost:8080/api/getTrainee?query=${query}`, requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
     }
 </script>

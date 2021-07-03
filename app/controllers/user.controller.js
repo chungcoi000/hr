@@ -10,8 +10,22 @@ exports.getTrainerAccount = async (req, res) => {
     try {
         if (req.session && req.session.user.role === "staff") {
             const role = await Role.findOne({name: "trainer"});
+            let query = req.query.query;
+
+            let filter = {
+                role: role._id,
+                $or: [
+                    {name: {$regex: query, $options: 'i'}},
+                    {email: {$regex: query, $options: 'i'}},
+                    {bio: {$regex: query, $options: 'i'}}
+                ]
+            }
+
+            if (!query) {
+                filter = {role: role._id};
+            }
             if (role) {
-                const user = await User.find({role: role._id}).populate({
+                const user = await User.find(filter).populate({
                     path: 'courseAssign',
                     model: "Course",
                     select: "name description category"
@@ -34,13 +48,27 @@ exports.getTraineeAccount = async (req, res) => {
     try {
         if (req.session && req.session.user.role === "staff") {
             const role = await Role.findOne({name: "trainee"});
+            let query = req.query.query;
+            console.log("query", query);
+
+            let filter = {
+                role: role._id,
+                $or: [
+                    {name: {$regex: query, $options: 'i'}},
+                    {email: {$regex: query, $options: 'i'}},
+                    {bio: {$regex: query, $options: 'i'}}
+                ]
+            }
+
+            if (!query) {
+                filter = {role: role._id};
+            }
             if (role) {
-                const user = await User.find({role: role._id}).populate({
+                const user = await User.find(filter).populate({
                     path: 'courseAssign',
                     model: "Course",
                     select: "name description category"
                 }).lean();
-                console.log(user);
                 return res.render("staff/traineeList", {user: user});
             }
         }
@@ -107,10 +135,20 @@ exports.deleteAccount = async (req, res) => {
     try {
         if (req.session && req.session.user.role === "staff") {
             const deleteId = req.body.delete_id;
+            const user = await User.findOne({_id: deleteId})
+                .populate({
+                    path: 'role',
+                    model: "Role"
+                })
             await User.deleteOne({_id: deleteId});
-            res.send({message: "Delete account successfully"});
+            if (user.role.name === "trainer") {
+                return res.render("staff/trainerList")
+            }
+            if (user.role.name === "trainee") {
+                return res.render("staff/traineeList")
+            }
         } else {
-            res.render("staff/traineeList");
+            res.redirect("/login");
         }
     } catch (err) {
         return res.send({message: err});
@@ -132,13 +170,37 @@ exports.updateInformation = async (req, res) => {
         await User.updateOne(
             {_id: user_id},
             {
-                name: name, dob: dob, email: email, telephone: telephone, education: education,
-                toeicscore: toeicscore, programlanguage: programlanguage, bio: bio
+                name: name,
+                dob: dob,
+                email: email,
+                telephone: telephone,
+                education: education,
+                toeicscore: toeicscore,
+                programlanguage: programlanguage,
+                bio: bio
             }
         );
-        res.redirect("/api/getTrainer")
+        if (req.session.user.role === "staff") {
+            const user = await User.findOne({_id: user_id}).populate(
+                {
+                    path: "role",
+                    model: "Role"
+                }
+            );
+            if (user.role.name === "trainer") {
+                res.redirect("/api/getTrainer")
+            }
 
+            if (user.role.name === "trainee") {
+                res.redirect("/api/getTrainee")
+            }
+        }
+
+        if (req.session.user.role === "trainer") {
+            res.redirect("/api/getTrainer")
+        }
     } catch (err) {
+        console.log(err);
         res.send({message: err});
     }
 };
@@ -146,12 +208,27 @@ exports.updateInformation = async (req, res) => {
 exports.getUpdateInformation = async (req, res) => {
     try {
         let id = req.query.user_id;
-        // const role = await Role.find({});
-        console.log(id);
-        const user = await User.findOne({_id: id}).lean();
-        return res.render("trainer/trainerUpdateProfile", {
-            user: user
-        })
+        const user = await User.findOne({_id: id}).populate({
+            path: "role",
+            model: "Role"
+        }).lean();
+        if (req.session.user.role === "staff") {
+            if (user.role.name === "trainer") {
+                res.render("staff/editTrainer", {
+                    user: user
+                });
+            }
+            if (user.role.name === "trainee") {
+                res.render("staff/editTrainee", {
+                    user: user
+                });
+            }
+        }
+        if (req.session.user.role === "trainer") {
+            return res.render("trainer/trainerUpdateProfile", {
+                user: user
+            })
+        }
     } catch (e) {
         return res.send({message: "Error "});
     }
@@ -165,7 +242,6 @@ exports.updatePassword = async (req, res) => {
         const currentPassword = req.body.password;
         let newPassword = req.body.new_password;
 
-        console.log(user);
 
         const comparePassword = await bcrypt.compareSync(
             currentPassword,
@@ -225,25 +301,42 @@ exports.getUpdatePassword = async (req, res) => {
 
 exports.searchUser = async (req, res) => {
     try {
-        if (req.session && req.session.role.name === "staff") {
+        if (req.session && req.session.user.role === "staff") {
             let query = req.body.query;
-
-            const trainee = await User.find(
-                {
-                    $or: [
-                        {name: {$regex: query, $options: 'i'}},
-                        {bio: {$regex: query, $options: 'i'}},
-                        {education: {$regex: query, $option: 'i'}}
-                    ]
-                })
-
-                .populate({path: "course", model: "Course", select: "name description"});
-
-            if (trainee.length === 0) {
-                return res.send({message: "Can't find anything"});
+            let filter = {
+                $or: [
+                    {name: {$regex: query, $options: 'i'}},
+                    {email: {$regex: query, $options: 'i'}},
+                    {bio: {$regex: query, $options: 'i'}}
+                ]
             }
 
-            res.send(trainee);
+            if (!query) {
+                filter = {};
+            }
+
+            const user = await User.find(filter)
+                .populate([{
+                        path: "courseAssign",
+                        model: "Course",
+                        select: "name description"
+                    }, {
+                        path: "role",
+                        model: "Role",
+                        select: "name"
+                    }]
+                )
+                .lean();
+
+            if (user.length === 0) {
+                return res.send({message: "Can't find anything"});
+            }
+            if (user.role === "trainer") {
+                res.render("staff/trainerList", {user: user});
+            }
+            if (user.role === "trainee") {
+                res.render("staff/traineeList", {user: user});
+            }
         }
     } catch (err) {
         console.log(err);

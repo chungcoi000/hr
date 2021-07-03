@@ -19,14 +19,6 @@ exports.getCourse = async (req, res) => {
         res.send({message: "Error"});
     }
 };
-exports.getCourseById = async (req, res) => {
-    try {
-        const course = await Course.find({_id: req.body.id});
-        res.send(course);
-    } catch (err) {
-        res.send({message: "Error"});
-    }
-}
 
 exports.addCourse = async (req, res) => {
     try {
@@ -242,14 +234,29 @@ exports.searchCourse = async (req, res) => {
     try {
         let query = req.body.query;
 
-        const course = await Course.find({name: {$regex: query, $options: 'i'}})
-            .populate({path: "category", model: "Category", select: "name description"});
+        let filter = {
+            $or: [
+                {name: {$regex: query, $options: 'i'}},
+                {description: {$regex: query, $options: 'i'}}
+            ]
+        }
+
+        if (!query) {
+            filter = {};
+        }
+
+        const course = await Course.find(filter)
+            .populate({
+                path: "category",
+                model: "Category",
+                select: "name description"
+            }).lean();
 
         if (course.length === 0) {
             return res.send({message: "Can't find anything"});
         }
 
-        res.send(course);
+        res.render("staff/manageCourse", {course: course});
     } catch (err) {
         console.log(err);
         return res.send({message: "Error"});

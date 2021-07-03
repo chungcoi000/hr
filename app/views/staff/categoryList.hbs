@@ -2,7 +2,10 @@
     <a href="/staff/addCate">
         <button type="submit" class="btn add">Add new Category</button>
     </a>
-    <input type="text" class="search" placeholder="Search..">
+    <form action="/staff/searchCate" method="post">
+        <input type="text" class="find" name="query" placeholder="Search..">
+        <input type="submit">
+    </form>
     <table>
         <tr>
             <th>Name</th>
