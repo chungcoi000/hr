@@ -25,6 +25,8 @@ module.exports = (app) => {
     app.get("/staff/courseCate", courseController.getCourseFromCategory);
 
     app.post("/staff/addCourseToUser", courseController.addUserToCourse);
+    app.get("/staff/addCourseToUser", courseController.getAddUserToCourse);
+
 
     app.post("/staff/deleteCourseFromUser", courseController.deleteUserFromCourse);
 

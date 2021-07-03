@@ -1,31 +1,39 @@
 <div class="form">
-    <form action="">
+    <form action="/staff/addCourseToUser">
         <div class="container">
             <hr>
 
-            <label for="Email"><b>Course Name</b></label>
-            <input type="text" placeholder="Enter Name" name="Email" id="email" required>
-
-            <label class="label">Trainer</label>
+            <label class="label">Course</label>
             <div class="rs-select2 js-select-simple select--no-search">
-                <select name="subject">
-                    <option></option>
-                    <option></option>
-                    <option></option>
+                <select name="course">
+                    <option disabled="disabled" selected="selected">Choose option</option>
+                        {{#each course}}
+                            <option value="course.name">{{course.name}}</option>
+                        {{/each}}
                 </select>
                 <div class="select-dropdown"></div>
             </div>
+
+            <label class="label">Trainer</label>
+            <select name="skills" multiple="">
+                <option value="">Skills</option>
+                <option value="angular">Angular</option>
+                <option value="css">CSS</option>
+                <option value="design">Graphic Design</option>
+                <option value="ember">Ember</option>
+            </select>
 
             <label class="label">Trainee</label>
             <div class="rs-select2 js-select-simple select--no-search">
-                <select name="subject">
-                    <option></option>
-                    <option></option>
-                    <option></option>
+                <select name="skills" multiple="">
+                    <option value="">Skills</option>
+                    <option value="angular">Angular</option>
+                    <option value="css">CSS</option>
+                    <option value="design">Graphic Design</option>
+                    <option value="ember">Ember</option>
                 </select>
                 <div class="select-dropdown"></div>
             </div>
-
             <hr>
 
             <button type="submit" class="btn">Update</button>

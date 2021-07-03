@@ -127,15 +127,20 @@ exports.addUserToCourse = async (req, res) => {
         if (userSession && userSession.user.role === "staff") {
             const user = req.body.user_id;
             const courseId = req.body.course_id;
-            console.log(user);
             if (!courseId) {
                 res.send({message: "Must provide course id"});
             }
 
             if (!await Course.findOne({_id: courseId})) {
-                return res.send({message: "Can  not find course "});
+                return res.render("/staff/addCourseToUser");
             }
-            await User.findOne({_id: user}).catch(err => {
+            await User.findOne({_id: user})
+                .populate({
+                    path: "role",
+                    model: "Role",
+                    select: "name"
+                }).lean()
+                .catch(err => {
                 res.send({message: err})
             });
 
@@ -146,15 +151,33 @@ exports.addUserToCourse = async (req, res) => {
                     courseAssign: courseId
                 }
             })
-            res.send({message: "Add Course to User successfully"});
+            res.render("staff/manageCourse");
         } else {
-            res.send({message: "No session provided"});
+            res.redirect("/login");
         }
     } catch (err) {
         console.log(err);
         return res.send({message: "Error"});
     }
 };
+
+exports.getAddUserToCourse = async (req, res) => {
+    try {
+        const id = req.body.user_id;
+        const courseId = req.body.course_id;
+
+        const user = await User.find({_id : id}).lean();
+        const course = await Course.find({_id: courseId}).lean();
+
+        return res.render("staff/addUserToCourse", {
+            user: user,
+            course: course
+        });
+
+    } catch (err) {
+        res.send(err)
+    }
+}
 
 exports.deleteUserFromCourse = async (req, res) => {
     try {
