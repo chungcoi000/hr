@@ -2,7 +2,7 @@
 
     <form action="/api/getTrainer">
         <input id="searchfield" type="text" class="find" name="query" placeholder="Search..">
-        <input type="submit" onsubmit=searchUser()>
+        <button type="submit" class="btn add" onsubmit=searchUser()>Search</button>
     </form>
 
     <table>
@@ -20,24 +20,24 @@
         </tr>
         {{#each user}}
             <tr>
-                <th>{{this.username}}</th>
-                <th>{{this.name}}</th>
-                <th>{{this.dob}}</th>
-                <th>{{this.email}}</th>
-                <th>{{this.telephone}}</th>
-                <th>{{this.education}}</th>
-                <th>{{this.bio}}</th>
-                <th>
+                <td>{{this.username}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.dob}}</td>
+                <td>{{this.email}}</td>
+                <td>{{this.telephone}}</td>
+                <td>{{this.education}}</td>
+                <td>{{this.bio}}</td>
+                <td>
                     {{#each courseAssign}}
                         {{this.name}} <br>
                     {{/each}}
-                </th>
-                <th>
+                </td>
+                <td>
                     <a class="btn add" href='/api/updateInfo?user_id={{_id}}'>Update</a>
-                </th>
-                <th>
+                </td>
+                <td>
                     <a class="btn add" onclick="onDelete('{{_id}}')">Delete</a>
-                </th>
+                </td>
             </tr>
         {{/each}}
     </table>

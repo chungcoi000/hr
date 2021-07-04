@@ -1,54 +1,66 @@
 <style>
 
-    @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+    /*@import url(https://fonts.googleapis.com/css?family=Open+Sans);*/
 
-    body{
-        background: #f2f2f2 !important;
-        font-family: 'Open Sans', sans-serif !important;
+    /*body{*/
+    /*    background: #f2f2f2 !important;*/
+    /*    font-family: 'Open Sans', sans-serif !important;*/
+    /*}*/
+
+    /*.search {*/
+    /*    width: 100% !important;*/
+    /*    position: relative !important;*/
+    /*    display: flex !important;*/
+    /*}*/
+
+    /*.searchTerm {*/
+    /*    width: 100% !important;*/
+    /*    border: 3px solid #00B4CC !important;*/
+    /*    border-right: none !important;*/
+    /*    padding: 15px !important;*/
+    /*    height: 20px !important;*/
+    /*    border-radius: 5px 0 0 5px !important;*/
+    /*    outline: none !important;*/
+    /*    color: #9DBFAF !important;*/
+    /*}*/
+
+    /*.searchTerm:focus{*/
+    /*    color: #00B4CC !important;*/
+    /*}*/
+
+    /*.searchButton {*/
+    /*    width: 40px !important;*/
+    /*    height: 36px !important;*/
+    /*    border: 1px solid #00B4CC !important;*/
+    /*    background: #00B4CC !important;*/
+    /*    text-align: center !important;*/
+    /*    color: #fff !important;*/
+    /*    border-radius: 0 5px 5px 0 !important;*/
+    /*    cursor: pointer !important;*/
+    /*    font-size: 20px !important;*/
+    /*}*/
+
+    /*!*Resize the wrap to see the search bar change!*!*/
+    /*.wrap{*/
+    /*    width: 30% !important;*/
+    /*    position: absolute !important;*/
+    /*    top: 50% !important;*/
+    /*    left: 50% !important ;*/
+    /*    transform: translate(-50%, -50%) !important;*/
+    /*}*/
+    input[type=text]{
+        width: 88%;
+        padding: 15px;
+        margin: 5px 0 5px 0;
+        display: inline-flex;
+        border: none;
+        background: #f1f1f1;
     }
 
-    .search {
-        width: 100% !important;
-        position: relative !important;
-        display: flex !important;
+    input[type=text]:focus{
+        background-color: #ddd;
+        outline: none;
     }
-
-    .searchTerm {
-        width: 100% !important;
-        border: 3px solid #00B4CC !important;
-        border-right: none !important;
-        padding: 15px !important;
-        height: 20px !important;
-        border-radius: 5px 0 0 5px !important;
-        outline: none !important;
-        color: #9DBFAF !important;
-    }
-
-    .searchTerm:focus{
-        color: #00B4CC !important;
-    }
-
-    .searchButton {
-        width: 40px !important;
-        height: 36px !important;
-        border: 1px solid #00B4CC !important;
-        background: #00B4CC !important;
-        text-align: center !important;
-        color: #fff !important;
-        border-radius: 0 5px 5px 0 !important;
-        cursor: pointer !important;
-        font-size: 20px !important;
-    }
-
-    /*Resize the wrap to see the search bar change!*/
-    .wrap{
-        width: 30% !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important ;
-        transform: translate(-50%, -50%) !important;
-    }
-
     th {
         padding-top: 12px;
         padding-bottom: 12px;
@@ -71,19 +83,11 @@
 
 <div class="form">
     <a href="/staff/addCourse">
-        <button type="submit" class="btn add">Add Course</button>
+        <button type="submit" class="btn create">Add Course</button>
     </a>
-    <div class="wrap">
-        <div class="search">
-            <input type="text" class="searchTerm" placeholder="What are you looking for?">
-            <button type="submit" class="searchButton">
-                <i class="fa fa-search"></i>
-            </button>
-        </div>
-    </div>
     <form action="/staff/searchCourse" method="post">
         <input type="text" class="find" name="query" placeholder="Search..">
-        <input type="submit">
+        <button type="submit" class="btn add">Search</button>
     </form>
     <table>
         <tr>

@@ -4,7 +4,7 @@
     </a>
     <form action="/staff/searchCate" method="post">
         <input type="text" class="find" name="query" placeholder="Search..">
-        <input type="submit">
+        <button type="submit" class="btn add">Search</button>
     </form>
     <table>
         <tr>
@@ -15,14 +15,14 @@
         </tr>
         {{#each category}}
             <tr>
-                <th>{{this.name}}</th>
-                <th>{{this.description}}</th>
-                <th>
+                <td>{{this.name}}</td>
+                <td>{{this.description}}</td>
+                <td>
                     <button class="btn" onclick="window.location.href='/staff/updateCate?cate_id={{_id}}'">Update</button>
-                </th>
-                <th>
+                </td>
+                <td>
                     <button class="btn" onclick="onDelete('{{_id}}')">Delete</button>
-                </th>
+                </td>
             </tr>
         {{/each}}
     </table>
