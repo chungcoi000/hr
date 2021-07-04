@@ -90,7 +90,6 @@
             <th>Course Name</th>
             <th>Description</th>
             <th>Category</th>
-            <th>Assign Course To User</th>
             <th>Update</th>
             <th>Delete</th>
         </tr>
@@ -99,9 +98,6 @@
                 <td>{{this.name}}</td>
                 <td>{{this.description}}</td>
                 <td>{{this.category.name}}</td>
-                <td>
-                    <button class="btn add" onclick="window.location.href='/staff/addCourseToUser'">Add</button>
-                </td>
                 <td>
                     <button class="btn add" onclick="window.location.href='/staff/updateCourse?course_id={{_id}}'"
                     >Update</button>

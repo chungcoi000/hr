@@ -1,4 +1,5 @@
 const db = require("../models");
+const Role = db.role;
 const User = db.user;
 const Course = db.course;
 const Category = db.category;
@@ -163,11 +164,10 @@ exports.addUserToCourse = async (req, res) => {
 
 exports.getAddUserToCourse = async (req, res) => {
     try {
-        const id = req.body.user_id;
-        const courseId = req.body.course_id;
+        const role = await Role.find({name: {$in: ["staff", "trainer"]}});
 
-        const user = await User.find({_id : id}).lean();
-        const course = await Course.find({_id: courseId}).lean();
+        const user = await User.find({role: role}).lean();
+        const course = await Course.find({}).lean();
 
         return res.render("staff/addUserToCourse", {
             user: user,
