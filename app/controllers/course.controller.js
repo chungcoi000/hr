@@ -124,35 +124,28 @@ exports.getCourseFromCategory = async (req, res) => {
 
 exports.addUserToCourse = async (req, res) => {
     try {
-        const userSession = req.session
-        if (userSession && userSession.user.role === "staff") {
-            const user = req.body.user_id;
+        if (req.session && req.session.user.role === "staff") {
+            const trainer = req.body.trainer_id;
+            const trainee = req.body.trainee_id;
             const courseId = req.body.course_id;
+            console.log(trainer, trainee, courseId);
             if (!courseId) {
                 res.send({message: "Must provide course id"});
             }
 
             if (!await Course.findOne({_id: courseId})) {
-                return res.render("/staff/addCourseToUser");
+                return res.render("staff/addUserToCourse");
             }
-            await User.findOne({_id: user})
-                .populate({
-                    path: "role",
-                    model: "Role",
-                    select: "name"
-                }).lean()
-                .catch(err => {
-                res.send({message: err})
-            });
+            trainee.push(trainer)
 
-            await User.updateOne({
-                _id: user
+            await User.updateMany({
+                _id: {$in: trainee}
             }, {
                 $push: {
                     courseAssign: courseId
                 }
             })
-            res.render("staff/manageCourse");
+            res.redirect("/home");
         } else {
             res.redirect("/login");
         }
@@ -164,13 +157,15 @@ exports.addUserToCourse = async (req, res) => {
 
 exports.getAddUserToCourse = async (req, res) => {
     try {
-        const role = await Role.find({name: {$in: ["staff", "trainer"]}});
-
-        const user = await User.find({role: role}).lean();
+        const trainee = await Role.find({name: "trainee"});
+        const trainer = await Role.find({name: "trainer"});
+        const user1 = await User.find({role: trainer}).lean();
+        const user2 = await User.find({role: trainee}).lean();
         const course = await Course.find({}).lean();
 
         return res.render("staff/addUserToCourse", {
-            user: user,
+            trainer: user1,
+            trainee: user2,
             course: course
         });
 
@@ -276,7 +271,11 @@ exports.searchCourse = async (req, res) => {
             }).lean();
 
         if (course.length === 0) {
-            return res.send({message: "Can't find anything"});
+            return res.render("staff/manageCourse", {
+                course: course,
+                error: true,
+                message: "Can't find in db"
+            });
         }
 
         res.render("staff/manageCourse", {course: course});

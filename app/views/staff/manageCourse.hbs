@@ -1,10 +1,12 @@
-
-
 <div class="form">
+    {{#if error}}
+        <p class="danger">{{message}}</p>
+    {{/if}}
     <a href="/staff/addCourse">
         <button type="submit" class="btn create">Add Course</button>
     </a>
     <form action="/staff/searchCourse" method="post">
+
         <input type="text" class="find" name="query" placeholder="Search..">
         <button type="submit" class="btn add">Search</button>
     </form>
