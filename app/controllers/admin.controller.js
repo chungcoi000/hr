@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 
 exports.getAccount = async (req, res) => {
     try {
-        const role = await Role.find({name: {$in: ["staff", "trainer", "trainee"]}});
+        const role = await Role.find({name: {$in: ["staff", "trainer"]}});
 
         const user = await User.find({role}).select("username")
             .lean().populate("role", "name", "Role");
