@@ -1,0 +1,44 @@
+<div class="form">
+    {{#if error}}
+        <p class="danger">{{message}}</p>
+    {{/if}}
+    <table>
+        <tr>
+            <th>Course Name</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Remove</th>
+        </tr>
+        <div id="request_user_id" style="display: none">{{userId}}</div>
+
+        {{#each course}}
+            <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.category.name}}</td>
+                <td>
+                    <a class="btn" onclick="onDelete('{{this._id}}')">Delete</a>
+                </td>
+            </tr>
+        {{/each}}
+    </table>
+</div>
+
+<script>
+    function onDelete(course_id) {
+        let requestOptions = {
+            method: 'POST',
+            redirect: 'follow'
+        };
+
+        const user_id = document.getElementById("request_user_id").innerHTML;
+
+        fetch(`/staff/deleteCourseFromUser?course_id=${course_id}&user_id=${user_id}`, requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    window.location.href='/home';
+                    console.log(result)
+                })
+                .catch(error => console.log('error', error));
+    }
+</script>

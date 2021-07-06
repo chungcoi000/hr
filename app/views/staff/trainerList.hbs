@@ -1,4 +1,3 @@
-
 <div class="form">
 
     <form action="/api/getTrainer">
@@ -15,7 +14,7 @@
             <th>Telephone</th>
             <th>Education</th>
             <th>Bio</th>
-            <th>Course</th>
+            <th>Assign Course From User</th>
             <th>Update</th>
             <th>Delete</th>
         </tr>
@@ -29,9 +28,7 @@
                 <td>{{this.education}}</td>
                 <td>{{this.bio}}</td>
                 <td>
-                    {{#each courseAssign}}
-                        {{this.name}} <br>
-                    {{/each}}
+                    <a class="btn" href='/api/viewCourseAssigned?user_id={{_id}}'>View</a>
                 </td>
                 <td>
                     <a class="btn add" href='/api/updateInfo?user_id={{_id}}'>Update</a>

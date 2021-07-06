@@ -17,7 +17,7 @@ exports.getCourse = async (req, res) => {
             return res.render("trainee/traineeCourses", {course: course});
         }
     } catch (err) {
-        res.send({message: "Error"});
+        res.render("error");
     }
 };
 
@@ -58,7 +58,7 @@ exports.getAddCourse = async (req, res) => {
         const categories = await Category.find({}).lean();
         res.render("staff/addCourse", {categories: categories})
     } catch (err) {
-        return res.send({message: "Error"});
+        return res.render("error");
     }
 }
 
@@ -74,11 +74,10 @@ exports.updateCourse = async (req, res) => {
             {_id: course_id},
             {name: name, description: description, category: category._id}
         );
-        console.log(category)
         res.redirect("/api/getCourse");
 
     } catch (err) {
-        res.send({message: "Error"});
+        res.render("error");
     }
 };
 
@@ -102,7 +101,7 @@ exports.deleteCourse = async (req, res) => {
         await Course.deleteOne({_id: deleteId});
         res.render("staff/manageCourse");
     } catch (err) {
-        res.send({message: "Error"});
+        res.render("error");
     }
 };
 
@@ -116,7 +115,7 @@ exports.getCourseFromCategory = async (req, res) => {
             return res.send(course);
         }
     } catch (err) {
-        res.send({message: "Error"});
+        res.render("error");
     }
 };
 
@@ -128,7 +127,6 @@ exports.addUserToCourse = async (req, res) => {
             const trainer = req.body.trainer_id;
             const trainee = req.body.trainee_id;
             const courseId = req.body.course_id;
-            console.log(trainer, trainee, courseId);
             if (!courseId) {
                 res.send({message: "Must provide course id"});
             }
@@ -151,7 +149,7 @@ exports.addUserToCourse = async (req, res) => {
         }
     } catch (err) {
         console.log(err);
-        return res.send({message: "Error"});
+        return res.render("error");
     }
 };
 
@@ -170,7 +168,7 @@ exports.getAddUserToCourse = async (req, res) => {
         });
 
     } catch (err) {
-        res.send(err)
+        res.render("error");
     }
 }
 
@@ -178,19 +176,21 @@ exports.deleteUserFromCourse = async (req, res) => {
     try {
         const userSession = req.session
         if (userSession && userSession.user.role === "staff") {
-            const user = req.body.user_id;
-            const courseId = req.body.course_id;
+            const user = req.query.user_id;
+            const courseId = req.query.course_id;
+            console.log(user, courseId)
             if (!courseId) {
-                res.send({message: "Must provide course id"});
+                res.redirect("/api/viewCourseAssigned");
             }
 
             if (!await Course.findOne({_id: courseId})) {
-                return res.send({message: "Can not find user "});
+                return res.redirect("/api/viewCourseAssigned");
             }
 
-            await User.findOne({_id: user}).catch(err => {
-                res.send({message: err})
-            });
+            const role = await User.findOne({_id: user}).populate("role","name","Role")
+                .catch(err => {
+                    res.send({message: err})
+                });
             await User.updateOne({
                 _id: user
             }, {
@@ -198,13 +198,18 @@ exports.deleteUserFromCourse = async (req, res) => {
                     courseAssign: courseId
                 }
             })
-            res.send({message: "Delete User from Course successfully"});
+            if (role.role.name === "trainer") {
+                return res.render("staff/trainerList");
+            }
+            if (role.role.name === "trainee") {
+                return res.render("staff/traineeList");
+            }
         } else {
-            res.send({message: "No session provided"});
+            res.redirect("/login");
         }
     } catch (err) {
         console.log(err);
-        return res.send({message: "Error"});
+        return res.render("error");
     }
 };
 
@@ -241,10 +246,28 @@ exports.viewCourseAssigned = async (req, res) => {
                 }).lean();
             return res.render("trainee/traineeCourseAssigned", {user: user});
         }
+        if (session.role === "staff") {
+            const user_id = req.query.user_id;
+            const user = await User.findOne({_id: user_id})
+                .populate({
+                    path: 'courseAssign',
+                    model: "Course",
+                    select: "name description category",
+                    populate: {
+                        path: 'category',
+                        model: "Category",
+                        select: "name"
+                    }
+                }).lean();
+            return res.render("staff/removeCourse", {
+                userId: user._id,
+                course: user.courseAssign
+            });
+        }
         return res.redirect("/login");
     } catch (err) {
         console.log(err);
-        return res.send({message: "Error"});
+        return res.render("error");
     }
 };
 
@@ -281,7 +304,7 @@ exports.searchCourse = async (req, res) => {
         res.render("staff/manageCourse", {course: course});
     } catch (err) {
         console.log(err);
-        return res.send({message: "Error"});
+        return res.render("error");
 
     }
 };
