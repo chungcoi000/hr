@@ -11,14 +11,14 @@
         </tr>
         {{#each user}}
             <tr>
-                <th>{{username}}</th>
-                <th>{{role.name}}</th>
-                <th>
+                <td>{{username}}</td>
+                <td>{{role.name}}</td>
+                <td>
                     <button class="btn add" onclick="window.location.href='/admin/updateAccount?user_id={{_id}}'">Update</button>
-                </th>
-                <th>
+                </td>
+                <td>
                     <button class="btn add" onclick="onDelete('{{_id}}')">Delete</button>
-                </th>
+                </td>
             </tr>
         {{/each}}
     </table>
