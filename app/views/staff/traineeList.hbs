@@ -17,7 +17,7 @@
             <th>TOEIC Score</th>
             <th>Main Language</th>
             <th>Bio</th>
-            <th>Course</th>
+            <th>Assign Course From User</th>
             <th>Update</th>
             <th>Delete</th>
         </tr>
@@ -33,9 +33,7 @@
                 <td>{{this.programlanguage}}</td>
                 <td>{{this.bio}}</td>
                 <td>
-                    {{#each courseAssign}}
-                        {{this.name}} <br>
-                    {{/each}}
+                    <a class="btn" href='/api/viewCourseAssigned?user_id={{_id}}'>View</a>
                 </td>
                 <td>
                     <a class="btn add" href='/api/updateInfo?user_id={{_id}}'>Update</a>
