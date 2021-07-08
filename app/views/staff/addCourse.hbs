@@ -5,13 +5,13 @@
                 <p class="danger">{{message}}</p>
             {{/if}}
             <hr>
-            <label for="name"><b>Course Name</b></label>
-            <input type="text" placeholder="Enter Course Name" name="name" id="name" required>
+            <label for="course"><b>Course Name</b></label>
+            <input type="text" placeholder="Enter Course" name="name" id="course" required>
 
             <label for="description"><b>Description</b></label>
-            <input type="text" placeholder="Enter Description" name="description" id="description" required>
+            <input type="text" placeholder="Enter Password" name="description" id="description" required>
 
-            <label class="label">Category</label>
+            <label class="label">Role</label>
             <div class="rs-select2 js-select-simple select--no-search">
                 <select name="category">
                     <option disabled="disabled" selected="selected">Choose option</option>
@@ -24,8 +24,7 @@
             <hr>
 
             <a href="/api/getCourse"><button type="submit" class="btn">Add</button></a>
-            <a><button type="submit" class="btn" onclick="window.location.href='/api/getCourse'">Cancel</button></a>
-
+            <a><button type="submit" class="btn" onclick="window.location.href = '/api/getCourse'">Return</button></a>
         </div>
     </form>
 </div>

@@ -46,10 +46,10 @@ exports.addCourse = async (req, res) => {
 
         course.category = category._id;
         await Course.create(course);
-        return res.redirect("/admin/getAccount");
+        return res.redirect("/api/getCourse");
 
     } catch (err) {
-        res.send({message: err});
+        return res.send({message: err});
     }
 }
 
